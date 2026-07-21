@@ -24,13 +24,9 @@ Senha Padrão: 123@Mudar (Lembre-se de alterar o hash da senha no banco de dados
 
 🔒Dados a Mudar
 Não esqueça de ir no arquivo index.html e alterar as informações para seus respectivos dados.
-Pesquise por:
-
-SUA_CHAVE_PIX
-
-SEU-NOME-AQUI
-
-5511999999999
+Para alterar chave pix pesquise por: SUA_CHAVE_PIX 
+Para alterar beneficiário pesquise por:  SEU-NOME-AQUI
+Para alterar whatsapp pesquise por:  5511999999999
 
 
 📄 Licença
