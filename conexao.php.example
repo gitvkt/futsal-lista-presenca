@@ -1,0 +1,26 @@
+<?php
+// Prevenção estrita contra cache
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
+// Define que a resposta será um JSON
+header("Content-Type: application/json; charset=UTF-8");
+
+// Configurações do banco de dados (Substitua pelos seus dados no servidor)
+$host = 'localhost';
+$dbname = 'app_futsal';
+$user = 'app_user';
+$pass = 'SUA_SENHA_MYSQL';
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    ]);
+} catch (PDOException $e) {
+    http_response_code(500);
+    echo json_encode(["erro_conexao" => "Falha na conexão com o banco de dados."]);
+    exit;
+}
+?>
