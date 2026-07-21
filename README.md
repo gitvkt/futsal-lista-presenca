@@ -1,5 +1,7 @@
 # ⚽ Futsal da Firma - Lista de Presença & Arrecadação
 
+<img width="500" height="910" alt="futsalphp" src="https://github.com/user-attachments/assets/dc75decc-509a-4366-a39d-413b96fcd212" />
+
 Aplicação web simples, ágil e responsiva para gerenciamento de listas de presença e arrecadação de jogos de futsal. 
 
 O projeto conta com interface em **Tailwind CSS**, armazenamento dinâmico com **MySQL** e um painel restrito para administração com validação segura via hash de senha no PHP.
@@ -25,9 +27,6 @@ O projeto conta com interface em **Tailwind CSS**, armazenamento dinâmico com *
 ---
 
 ## 📁 Estrutura do Projeto
-
-<img width="500" height="910" alt="futsalphp" src="https://github.com/user-attachments/assets/dc75decc-509a-4366-a39d-413b96fcd212" />
-
 
 
 ```text
