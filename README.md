@@ -34,3 +34,6 @@ O projeto conta com interface em **Tailwind CSS**, armazenamento dinâmico com *
 ├── index.html               # Interface principal e modais de gerenciamento
 ├── preview_site.png         # Imagem de pré-visualização (Open Graph)
 └── schema.sql               # Estrutura e massa inicial de dados para o MySQL
+
+<img width="500" height="910" alt="futsalphp" src="https://github.com/user-attachments/assets/dc75decc-509a-4366-a39d-413b96fcd212" />
+
