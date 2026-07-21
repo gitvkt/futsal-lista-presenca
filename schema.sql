@@ -16,4 +16,4 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
 
 -- Usuário Admin padrão (Senha: 123@Mudar)
 INSERT INTO `usuarios` (`usuario`, `senha`) 
-VALUES ('admin', '$2y$10$wN2J0eM1oHkBvH2p9WlYGuI7V/J8x4O1lR1eXpQzS9.p2Q6A5Vw2i');
+VALUES ('admin', '$2y$15$MN3h7.72pA63r//OvbI04uAysfMaLjaQXgyLinSSktlzU8LZYjtc.');
