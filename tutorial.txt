@@ -22,5 +22,16 @@ Usuário: admin
 
 Senha Padrão: 123@Mudar (Lembre-se de alterar o hash da senha no banco de dados para uso em produção)
 
+🔒Dados a Mudar
+Não esqueça de ir no arquivo index.html e alterar as informações para seus respectivos dados.
+Pesquise por:
+
+SUA_CHAVE_PIX
+
+SEU-NOME-AQUI
+
+5511999999999
+
+
 📄 Licença
 Este projeto está sob a licença MIT. Sinta-se à vontade para usar e adaptar para a sua comunidade!
