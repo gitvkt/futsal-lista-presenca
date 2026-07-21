@@ -1,0 +1,26 @@
+🔧 Como Executar o Projeto
+Clonar o Repositório:
+
+Bash
+git clone [https://github.com/gitvkt/futsal-lista-presenca.git](https://github.com/gitvkt/futsal-lista-presenca.git)
+Configurar o Banco de Dados:
+
+Importe o arquivo schema.sql no seu servidor MySQL para criar o banco app_futsal e as tabelas necessárias.
+
+Configurar a Conexão PHP:
+
+Renomeie o arquivo conexao.php.example para conexao.php.
+
+Abra o conexao.php e insira as credenciais do seu ambiente (host, usuário e senha do banco de dados).
+
+Executar:
+
+Suba os arquivos em um servidor web com suporte a PHP (Apache, Nginx, cPanel, XAMPP, etc.).
+
+🔒 Acesso Padrão ao Painel
+Usuário: admin
+
+Senha Padrão: 123@Mudar (Lembre-se de alterar o hash da senha no banco de dados para uso em produção)
+
+📄 Licença
+Este projeto está sob a licença MIT. Sinta-se à vontade para usar e adaptar para a sua comunidade!
