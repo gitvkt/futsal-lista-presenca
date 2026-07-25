@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <!-- Controle Anti-Cache -->
     <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="pragma" content="no-cache">
     <meta http-equiv="expires" content="0">
@@ -10,13 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Futsal da Firma - Lista de Presença</title>
     
-    <!-- Ícone e Pré-visualização -->
     <link rel="icon" type="image/png" href="favicon.png">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Futsal da Firma - Lista de Presença">
-    <meta property="og:description" content="Confirme o seu nome na lista para a próxima rodada! Não se esqueça do Pix. ⚽🔥">
-    <meta property="og:image" content="preview_site.png?v=1">
-
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -34,8 +27,9 @@
             </button>
         </header>
 
-        <main class="max-w-md mx-auto mt-8 px-4 space-y-6">
+        <main class="max-w-md mx-auto mt-8 px-4 space-y-6 pb-12">
             
+            <!-- CARD DA LISTA -->
             <div class="bg-slate-800 rounded-2xl shadow-xl p-6 border border-slate-700">
                 <div class="flex justify-between items-center mb-6 border-b border-slate-700 pb-4">
                     <h2 class="text-xl font-bold flex items-center gap-2 text-emerald-400">
@@ -46,9 +40,7 @@
                     </span>
                 </div>
 
-                <ul id="listaJogadores" class="space-y-3 max-h-[350px] overflow-y-auto pr-1">
-                    <!-- Preenchido via JS/MySQL -->
-                </ul>
+                <ul id="listaJogadores" class="space-y-3 max-h-[350px] overflow-y-auto pr-1"></ul>
 
                 <div id="listaVazia" class="text-center py-8 text-slate-400 space-y-2">
                     <i class="fa-solid fa-ghost text-4xl block text-slate-500"></i>
@@ -59,10 +51,10 @@
             <!-- CARD PIX -->
             <div class="bg-slate-800 rounded-2xl shadow-xl p-5 border border-slate-700 space-y-3">
                 <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <i class="fa-brands fa-pix text-emerald-400 text-sm"></i> Pagamento da Rodada (Chave Aleatória)
+                    <i class="fa-brands fa-pix text-emerald-400 text-sm"></i> Pagamento da Rodada (Chave PIX)
                 </h3>
                 <div class="flex items-center gap-2 bg-slate-900 p-2.5 rounded-xl border border-slate-700">
-                    <input type="text" id="chavePixInput" readonly value="SUA_CHAVE_PIX" 
+                    <input type="text" id="chavePixInput" readonly value="SUA_CHAVE_PIX_AQUI" 
                         class="bg-transparent text-xs font-mono text-slate-300 flex-1 outline-none overflow-x-auto truncate">
                     <button onclick="copiarChavePix()" id="btnCopiarPix" 
                         class="bg-emerald-600 hover:bg-emerald-500 text-slate-900 text-xs font-bold px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 shrink-0">
@@ -71,14 +63,14 @@
                 </div>
                 
                 <p class="text-[11px] text-slate-400 flex items-center gap-1 pl-1">
-                    <i class="fa-solid fa-user text-slate-500 text-xs"></i> Beneficiário: <span class="text-slate-200 font-medium">SEU-NOME-AQUI</span>
+                    <i class="fa-solid fa-user text-slate-500 text-xs"></i> Beneficiário: <span class="text-slate-200 font-medium">NOME_DO_BENEFICIARIO</span>
                 </p>
 
                 <div class="pt-2 border-t border-slate-700/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                     <p class="text-[11px] text-amber-400 font-medium flex items-center gap-1">
                         <i class="fa-solid fa-receipt"></i> Não esqueça de enviar o comprovante!
                     </p>
-                    <a href="https://wa.me/5511999999999?text=Segue%20meu%20comprovante.%20Adicione%20meu%20nome%20a%20lista%20confirmada." 
+                    <a href="https://wa.me/5500000000000?text=Segue%20meu%20comprovante.%20Adicione%20meu%20nome%20a%20lista%20confirmada." 
                        target="_blank" 
                        class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[11px] font-bold px-2.5 py-1 rounded-lg transition-all flex items-center gap-1">
                         <i class="fa-brands fa-whatsapp text-sm"></i> Enviar no WhatsApp
@@ -86,31 +78,52 @@
                 </div>
             </div>
 
-            <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-xl p-5 border border-emerald-500/30 flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <div class="bg-emerald-500/10 p-3 rounded-xl border border-emerald-500/20 text-emerald-400">
-                        <i class="fa-solid fa-hand-holding-dollar text-2xl"></i>
+            <!-- RESUMO FINANCEIRO -->
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-xl p-5 border border-emerald-500/30 space-y-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-emerald-500/10 p-3 rounded-xl border border-emerald-500/20 text-emerald-400">
+                            <i class="fa-solid fa-hand-holding-dollar text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Arrecadado</h3>
+                            <p class="text-[11px] text-slate-500">(Soma das contribuições)</p>
+                        </div>
                     </div>
-                    <div>
-                        <h3 class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Total Arrecadado</h3>
-                        <p class="text-xs text-slate-500">Financiando o aluguel e a resenha</p>
+                    <div class="text-right">
+                        <span id="totalArrecadado" class="text-2xl font-black text-emerald-400 font-mono">R$ 0,00</span>
                     </div>
                 </div>
-                <div class="text-right">
-                    <span id="totalArrecadado" class="text-2xl font-black text-emerald-400 font-mono">R$ 0,00</span>
+
+                <div class="space-y-2 border-t border-slate-700/60 pt-3 text-xs">
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-400">Custo da Quadra:</span>
+                        <span id="valorQuadraExibicao" class="font-mono text-slate-200 font-bold">R$ 0,00</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-400">Pago à Quadra (Etapas):</span>
+                        <span id="totalPagoExibicao" class="font-mono text-amber-400 font-bold">R$ 0,00</span>
+                    </div>
+                    <div class="flex justify-between items-center pt-2 border-t border-slate-800">
+                        <span class="text-slate-300 font-bold">Saldo do Caixa:</span>
+                        <span id="saldoCaixa" class="font-mono text-base font-black">R$ 0,00</span>
+                    </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- RODAPÉ DE CRÉDITOS -->
-    <footer class="mt-12 py-6 text-center text-xs text-slate-500 border-t border-slate-800">
-        
-        <p>Desenvolvido com <i class="fa-solid fa-heart text-red-500"></i> por <a href="https://github.com/gitvkt" target="_blank" class="text-emerald-400 hover:underline font-bold">Deivid Viquiato</a></p>
-    <a href="https://vktcloud.com.br" target="_blank" class="text-emerald-400 hover:underline font-bold">VKT CLOUD</a></p>
+    <!-- RODAPÉ -->
+    <footer class="bg-slate-950/80 border-t border-slate-800/80 py-4 px-4 text-center text-xs text-slate-500 flex flex-col sm:flex-row justify-center items-center gap-3">
+        <p>Desenvolvido por <span class="font-semibold text-slate-300">Seu Nome</span></p>
+        <div class="flex items-center gap-3 text-slate-400">
+            <a href="#" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-400 transition-colors" title="Website"><i class="fa-solid fa-globe text-sm"></i></a>
+            <a href="#" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-400 transition-colors" title="GitHub"><i class="fa-brands fa-github text-sm"></i></a>
+            <a href="#" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-400 transition-colors" title="LinkedIn"><i class="fa-brands fa-linkedin text-sm"></i></a>
+        </div>
     </footer>
 
-    <!-- Modal Login -->
+    <!-- MODAL LOGIN -->
     <div id="modalLogin" class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 hidden backdrop-blur-sm z-50">
         <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-sm relative shadow-2xl">
             <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
@@ -126,101 +139,75 @@
         </div>
     </div>
 
-    <!-- Modal Painel -->
-    <div id="modalPainel" class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 hidden backdrop-blur-sm z-50">
-        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-md relative shadow-2xl">
-            <div class="flex justify-between items-center mb-6">
+    <!-- MODAL PAINEL ADMIN -->
+    <div id="modalPainel" class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 hidden backdrop-blur-sm z-50 overflow-y-auto">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-md relative shadow-2xl space-y-5 my-8">
+            <div class="flex justify-between items-center">
                 <h3 class="text-lg font-bold text-emerald-400 flex items-center gap-2">
-                    <i class="fa-solid fa-gear"></i> Painel de Escalação
+                    <i class="fa-solid fa-gear"></i> Painel de Controle
                 </h3>
                 <button onclick="fecharPainel()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
 
-            <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 mb-6">
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Adicionar Jogador</label>
                 <div class="flex gap-2">
-                    <input type="text" id="nomeJogador" class="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500" placeholder="Nome do jogador...">
-                    <button onclick="adicionarJogador()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-black px-4 rounded-lg">
-                        <i class="fa-solid fa-plus"></i>
-                    </button>
+                    <input type="text" id="nomeJogador" class="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-emerald-500" placeholder="Nome do jogador...">
+                    <input type="number" step="0.01" id="valorJogadorInicial" class="w-24 bg-slate-800 border border-slate-700 rounded-lg px-2 py-2 text-white text-xs font-mono focus:outline-none focus:border-emerald-500" placeholder="R$ 20.00" value="20.00">
+                    <button onclick="adicionarJogador()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-black px-4 rounded-lg"><i class="fa-solid fa-plus"></i></button>
                 </div>
             </div>
 
-            <ul id="listaGerenciar" class="space-y-2 max-h-[200px] overflow-y-auto pr-1"></ul>
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Custo Total da Quadra (R$)</label>
+                <div class="flex gap-2">
+                    <input type="number" step="0.01" id="valorQuadraInput" class="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-emerald-500 font-mono" placeholder="Ex: 200.00">
+                    <button onclick="salvarValorQuadra()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-900 font-bold px-4 rounded-lg text-xs">Salvar</button>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3">
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Lançar Pagamento da Quadra (Parcelas)</label>
+                <div class="flex gap-2">
+                    <input type="text" id="descParcelaInput" class="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-emerald-500" placeholder="Ex: Sinal / 1ª Parcela">
+                    <input type="number" step="0.01" id="valorParcelaInput" class="w-24 bg-slate-800 border border-slate-700 rounded-lg px-2 py-2 text-white text-xs font-mono focus:outline-none focus:border-emerald-500" placeholder="R$ Valor">
+                    <button onclick="pagarParcela()" class="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-3 rounded-lg text-xs">Lançar</button>
+                </div>
+                <ul id="listaParcelas" class="space-y-1.5 pt-2 max-h-[120px] overflow-y-auto border-t border-slate-800"></ul>
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Gerenciar Jogadores & Contribuições</label>
+                <ul id="listaGerenciar" class="space-y-2 max-h-[220px] overflow-y-auto pr-1"></ul>
+            </div>
         </div>
     </div>
 
     <script>
-        const VALOR_POR_JOGADOR = 20.00;
+        const API_URL = 'api.php';
+        const SENHA_SECRETA = "SUA_SENHA_ADMIN_AQUI";
+        
         let jogadores = [];
+        let valorQuadra = 0.00;
+        let pagamentosQuadra = [];
+        let totalPagoQuadra = 0.00;
 
-        document.addEventListener("DOMContentLoaded", () => {
-            carregarJogadores();
-        });
+        document.addEventListener('DOMContentLoaded', carregarDados);
 
-        async function carregarJogadores() {
+        async function carregarDados() {
             try {
-                const response = await fetch('api.php?t=' + new Date().getTime(), { cache: 'no-store' });
-                jogadores = await response.json();
+                const res = await fetch(API_URL);
+                const data = await res.json();
+                
+                jogadores = data.jogadores || [];
+                valorQuadra = parseFloat(data.valor_quadra) || 0.00;
+                pagamentosQuadra = data.pagamentos_quadra || [];
+                totalPagoQuadra = parseFloat(data.total_pago_quadra) || 0.00;
+
                 renderizarLista();
                 renderizarPainelGerenciamento();
             } catch (err) {
-                console.error("Erro ao carregar lista do banco:", err);
-            }
-        }
-
-        async function autenticar() {
-            const senhaInput = document.getElementById('senhaInput').value;
-
-            try {
-                const response = await fetch('api.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ acao: 'login', senha: senhaInput })
-                });
-
-                const res = await response.json();
-
-                if (response.ok && res.status === 'sucesso') {
-                    fecharModalLogin();
-                    document.getElementById('modalPainel').classList.remove('hidden');
-                } else {
-                    alert("Senha incorreta!");
-                }
-            } catch (err) {
-                alert("Erro ao validar senha no servidor.");
-            }
-        }
-
-        async function adicionarJogador() {
-            const input = document.getElementById('nomeJogador');
-            const nome = input.value.trim();
-            if (!nome) return;
-
-            try {
-                await fetch('api.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ nome: nome })
-                });
-                input.value = "";
-                carregarJogadores();
-            } catch (err) {
-                alert("Erro ao salvar jogador.");
-            }
-        }
-
-        async function removerJogador(id, nome) {
-            if (confirm(`Remover ${nome} da lista?`)) {
-                try {
-                    await fetch('api.php', {
-                        method: 'DELETE',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ id: id })
-                    });
-                    carregarJogadores();
-                } catch (err) {
-                    alert("Erro ao remover jogador.");
-                }
+                console.error("Erro ao carregar dados:", err);
             }
         }
 
@@ -229,9 +216,7 @@
             const btn = document.getElementById('btnCopiarPix');
             navigator.clipboard.writeText(inputChave.value).then(() => {
                 btn.innerHTML = `<i class="fa-solid fa-check"></i> Copiado!`;
-                setTimeout(() => {
-                    btn.innerHTML = `<i class="fa-solid fa-copy"></i> Copiar`;
-                }, 2000);
+                setTimeout(() => { btn.innerHTML = `<i class="fa-solid fa-copy"></i> Copiar`; }, 2000);
             });
         }
 
@@ -242,30 +227,144 @@
         function fecharModalLogin() { document.getElementById('modalLogin').classList.add('hidden'); }
         function fecharPainel() { document.getElementById('modalPainel').classList.add('hidden'); }
 
+        function autenticar() {
+            if (document.getElementById('senhaInput').value === SENHA_SECRETA) {
+                fecharModalLogin();
+                document.getElementById('valorQuadraInput').value = valorQuadra.toFixed(2);
+                renderizarPainelGerenciamento();
+                document.getElementById('modalPainel').classList.remove('hidden');
+            } else {
+                alert("Senha incorreta!");
+            }
+        }
+
+        async function adicionarJogador() {
+            const input = document.getElementById('nomeJogador');
+            const valorInput = document.getElementById('valorJogadorInicial');
+            const nome = input.value.trim();
+            const valor = parseFloat(valorInput.value) || 0.00;
+
+            if (!nome) return;
+
+            await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nome: nome, valor_pago: valor })
+            });
+
+            input.value = "";
+            valorInput.value = "20.00";
+            await carregarDados();
+        }
+
+        async function editarValorJogador(id) {
+            const valorInput = parseFloat(document.getElementById(`valorInput_${id}`).value) || 0.00;
+            
+            await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ acao: 'editar_jogador', id: id, valor: valorInput })
+            });
+
+            await carregarDados();
+        }
+
+        async function removerJogador(id, nome) {
+            if (confirm(`Remover ${nome} da lista?`)) {
+                await fetch(API_URL, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id: id })
+                });
+                await carregarDados();
+            }
+        }
+
+        async function salvarValorQuadra() {
+            const valorInput = parseFloat(document.getElementById('valorQuadraInput').value) || 0.00;
+            await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ acao: 'salvar_quadra', valor: valorInput })
+            });
+            await carregarDados();
+            alert("Valor total da quadra atualizado!");
+        }
+
+        async function pagarParcela() {
+            const desc = document.getElementById('descParcelaInput').value.trim() || 'Parcela Quadra';
+            const valor = parseFloat(document.getElementById('valorParcelaInput').value) || 0;
+
+            if (valor <= 0) {
+                alert("Digite um valor válido para a parcela.");
+                return;
+            }
+
+            await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ acao: 'pagar_parcela', valor: valor, descricao: desc })
+            });
+
+            document.getElementById('descParcelaInput').value = '';
+            document.getElementById('valorParcelaInput').value = '';
+            await carregarDados();
+        }
+
+        async function removerParcela(id) {
+            if (confirm("Deseja cancelar este lançamento de pagamento?")) {
+                await fetch(API_URL, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tipo: 'parcela', id: id })
+                });
+                await carregarDados();
+            }
+        }
+
         function renderizarLista() {
             const lista = document.getElementById('listaJogadores');
             const listaVazia = document.getElementById('listaVazia');
             const contador = document.getElementById('contador');
             const totalTexto = document.getElementById('totalArrecadado');
+            const valorQuadraTexto = document.getElementById('valorQuadraExibicao');
+            const totalPagoTexto = document.getElementById('totalPagoExibicao');
+            const saldoTexto = document.getElementById('saldoCaixa');
             
             lista.innerHTML = "";
-            const total = jogadores.length;
-            contador.textContent = `${total} Jogador${total !== 1 ? 'es' : ''}`;
-            totalTexto.textContent = `R$ ${(total * VALOR_POR_JOGADOR).toFixed(2).replace('.', ',')}`;
+            const totalJogadores = jogadores.length;
 
-            if (total === 0) {
+            const totalArrecadado = jogadores.reduce((acc, j) => acc + (parseFloat(j.valor_pago) || 0), 0);
+            const saldo = totalArrecadado - totalPagoQuadra;
+
+            contador.textContent = `${totalJogadores} Jogador${totalJogadores !== 1 ? 'es' : ''}`;
+            totalTexto.textContent = `R$ ${totalArrecadado.toFixed(2).replace('.', ',')}`;
+            valorQuadraTexto.textContent = `R$ ${valorQuadra.toFixed(2).replace('.', ',')}`;
+            totalPagoTexto.textContent = `R$ ${totalPagoQuadra.toFixed(2).replace('.', ',')}`;
+            
+            saldoTexto.textContent = `R$ ${saldo.toFixed(2).replace('.', ',')}`;
+            saldoTexto.className = `font-mono text-base font-black ${saldo >= 0 ? 'text-emerald-400' : 'text-red-400'}`;
+
+            if (totalJogadores === 0) {
                 listaVazia.classList.remove('hidden');
                 return;
             }
             listaVazia.classList.add('hidden');
 
             jogadores.forEach((jogador, index) => {
+                const valorPago = parseFloat(jogador.valor_pago) || 0.00;
+                const pendente = valorPago === 0;
+
                 const li = document.createElement('li');
                 li.className = "flex items-center gap-3 bg-slate-700/40 px-4 py-3 rounded-xl border border-slate-700/60";
                 li.innerHTML = `
                     <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">${index + 1}º</span>
                     <span class="font-medium text-slate-200 flex-1">${jogador.nome}</span>
-                    <span class="text-xs text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full font-mono font-bold">R$ ${VALOR_POR_JOGADOR.toFixed(2).replace('.', ',')}</span>
+                    ${pendente ? '' : `
+                        <span class="text-xs px-2.5 py-1 rounded-full font-mono font-bold text-emerald-400 bg-emerald-500/10">
+                            R$ ${valorPago.toFixed(2).replace('.', ',')}
+                        </span>
+                    `}
                 `;
                 lista.appendChild(li);
             });
@@ -274,25 +373,50 @@
         function renderizarPainelGerenciamento() {
             const listaGerenciar = document.getElementById('listaGerenciar');
             listaGerenciar.innerHTML = "";
-
             if (jogadores.length === 0) {
-                listaGerenciar.innerHTML = `<li class="text-center text-sm text-slate-500 py-4">Nenhum jogador na lista.</li>`;
-                return;
+                listaGerenciar.innerHTML = `<li class="text-center text-xs text-slate-500 py-2">Nenhum jogador na lista.</li>`;
+            } else {
+                jogadores.forEach((jogador) => {
+                    const li = document.createElement('li');
+                    li.className = "flex justify-between items-center bg-slate-900 px-3 py-2 rounded-lg border border-slate-700 gap-2";
+                    li.innerHTML = `
+                        <span class="text-xs text-slate-300 font-medium truncate flex-1">${jogador.nome}</span>
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <span class="text-xs text-slate-500">R$</span>
+                            <input type="number" step="0.01" id="valorInput_${jogador.id}" 
+                                value="${(parseFloat(jogador.valor_pago) || 0).toFixed(2)}" 
+                                class="w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-1 text-xs text-white font-mono focus:border-emerald-500 outline-none">
+                            <button onclick="editarValorJogador(${jogador.id})" title="Salvar Valor" class="bg-emerald-600 hover:bg-emerald-500 text-slate-900 text-xs px-2 py-1 rounded font-bold">
+                                <i class="fa-solid fa-check"></i>
+                            </button>
+                            <button onclick="removerJogador(${jogador.id}, '${jogador.nome.replace(/'/g, "\\'")}')" class="text-red-400 hover:text-red-500 p-1">
+                                <i class="fa-solid fa-trash-can text-xs"></i>
+                            </button>
+                        </div>
+                    `;
+                    listaGerenciar.appendChild(li);
+                });
             }
 
-            jogadores.forEach((jogador) => {
-                const li = document.createElement('li');
-                li.className = "flex justify-between items-center bg-slate-900 px-3 py-2 rounded-lg border border-slate-700";
-                li.innerHTML = `
-                    <span class="text-sm text-slate-300 font-medium">${jogador.nome}</span>
-                    <button onclick="removerJogador(${jogador.id}, '${jogador.nome}')" class="text-red-400 hover:text-red-500 p-1"><i class="fa-solid fa-trash-can"></i></button>
-                `;
-                listaGerenciar.appendChild(li);
-            });
+            const listaParcelas = document.getElementById('listaParcelas');
+            listaParcelas.innerHTML = "";
+            if (pagamentosQuadra.length === 0) {
+                listaParcelas.innerHTML = `<li class="text-center text-[11px] text-slate-500 py-1">Nenhum pagamento registrado.</li>`;
+            } else {
+                pagamentosQuadra.forEach((pag) => {
+                    const li = document.createElement('li');
+                    li.className = "flex justify-between items-center bg-slate-800 px-2.5 py-1 rounded border border-slate-700/80 text-xs";
+                    li.innerHTML = `
+                        <span class="text-slate-300 truncate max-w-[160px]">${pag.descricao} <span class="text-[10px] text-slate-500">(${pag.data})</span></span>
+                        <div class="flex items-center gap-2">
+                            <span class="font-mono text-emerald-400 font-bold">R$ ${parseFloat(pag.valor).toFixed(2).replace('.', ',')}</span>
+                            <button onclick="removerParcela(${pag.id})" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                    `;
+                    listaParcelas.appendChild(li);
+                });
+            }
         }
-
-        document.getElementById('senhaInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') autenticar(); });
-        document.getElementById('nomeJogador').addEventListener('keypress', (e) => { if (e.key === 'Enter') adicionarJogador(); });
     </script>
 </body>
 </html>
