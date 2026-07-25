@@ -55,3 +55,29 @@ A versão **4.0** do projeto traz uma reformulação importante na regra de cál
 * **v3.0:** Implementação do parcelamento de pagamento da quadra e arrecadação fixa de R$ 20,00 por jogador.
 * **v2.0:** Adição do Painel Administrativo protegido por senha.
 * **v1.0:** Lançamento inicial da lista de confirmação de presença e chave Pix.
+
+
+🚀 Release v4.4 — Futsal da Firma
+💡 Destaques da Atualização
+Esta versão traz melhorias no painel financeiro e na interface pública de confirmação dos jogadores, tornando a visualização mais limpa ao ocultar badges de pendência e aprimorando a exibição do resumo do caixa.
+
+🛠️ O que mudou?
+✨ Melhorias na Interface (UI/UX)
+Ajuste na Exibição da Lista: Os jogadores com pagamento pendente (R$ 0,00) agora aparecem sem badge/rótulo de status na página principal, mantendo o visual mais limpo sem alterar a regra de cálculo.
+
+Resumo Financeiro Otimizado: Exibição clara e dinâmica dos totais arrecadados, custos da quadra e saldo final em tempo real.
+
+⚙️ Backend & Regras de Negócio
+Ajustes na API (api.php): Otimização nas consultas SQL para consolidação de contribuições de jogadores e histórico de parcelas pagas à quadra.
+
+Manutenção da Lógica Core: Preservação integral do fluxo de cálculo de saldos e controle de permissões no painel administrativo.
+
+📦 Arquivos Impactados nesta Versão
+index.html (Ajuste visual na função renderizarLista() e estrutura)
+
+api.php (Manutenção da lógica de controle de pagamentos)
+
+📄 Notas de Implantação
+Certifique-se de substituir o arquivo index.html e api.php no servidor web.
+
+Como os arquivos possuem controle anti-cache, as mudanças serão refletidas imediatamente para os usuários.
