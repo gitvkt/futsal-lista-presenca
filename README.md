@@ -1,41 +1,57 @@
-# ⚽ Futsal da Firma - Lista de Presença & Arrecadação
+# ⚽ Futsal da Firma — Lista de Presença & Gestão Financeira
 
-<img width="500" height="1248" alt="001" src="https://github.com/user-attachments/assets/155292b9-e924-4ea0-bdad-450e3b5d52f7" />
+<p align="center">
+  <img width="500" alt="Pré-visualização do Futsal da Firma" src="https://github.com/user-attachments/assets/155292b9-e924-4ea0-bdad-450e3b5d52f7" />
+</p>
 
+Aplicação web leve, ágil e responsiva (*Single Page Application*) para gerenciamento de listas de presença e controle financeiro de partidas recreativas de futsal.
 
-Aplicação web simples, ágil e responsiva para gerenciamento de listas de presença e arrecadação de jogos de futsal. 
+O projeto conta com interface em **Tailwind CSS**, consumo de API RESTful via **PHP (PDO)** e armazenamento persistente com **MySQL**, oferecendo controle em tempo real tanto para os jogadores quanto para o organizador.
 
-O projeto conta com interface em **Tailwind CSS**, armazenamento dinâmico com **MySQL** e um painel restrito para administração com validação segura via hash de senha no PHP.
+---
+
+## 🎓 Projeto Extensionista (Contexto Acadêmico)
+
+Este repositório compõe um **Projeto Extensionista Universitário**, focado na aplicação prática da tecnologia para a solução de problemas organizacionais no âmbito comunitário.
+
+* **Inovação e Transformação Digital:** Digitalização do processo informal de arrecadação e controle de presença em grupos esportivos locais.
+* **Transparência Coletiva:** Prestação de contas clara em tempo real, exibindo arrecadação total, abates do custo do aluguel da quadra e saldo do caixa.
+* **Inclusão e Acessibilidade:** Interface *Mobile-First* otimizada, que dispensa cadastros ou downloads de aplicativos por parte dos participantes.
 
 ---
 
 ## 🚀 Funcionalidades
 
-- **Lista em Tempo Real:** Exibição dos jogadores confirmados na rodada.
-- **Cálculo Automático de Arrecadação:** Soma automática do valor arrecadado com base na taxa individual por jogador.
-- **Chave Pix Integrada:** Facilitador para cópia da chave Pix e redirecionamento direto para o WhatsApp do organizador com o comprovante.
-- **Painel Administrativo Restrito:** Área restrita por senha criptografada para adicionar e remover jogadores da lista.
-- **Anti-Cache Forçado:** Configurações no cabeçalho HTTP e meta tags para garantir que o navegador receba os dados atualizados a cada requisição.
+### 👥 Para os Jogadores (Público)
+- **Lista em Tempo Real:** Exibição dinâmica dos confirmados na rodada.
+- **Transparência de Caixa:** Resumo visível do total arrecadado, valor pago pela quadra e saldo final do caixa.
+- **Chave Pix Integrada:** Facilidade de cópia em um clique e botão direto para envio de comprovante via WhatsApp.
+
+### 🛡️ Para o Organizador (Painel Admin)
+- **Painel Restrito:** Área administrativa protegida por senha para gestão completa.
+- **Gerenciamento de Presença:** Adição e remoção simplificada de jogadores.
+- **Lançamento de Parcelas:** Registro de pagamentos efetuados à quadra (sinais, parcelas) com cálculo automático de abatimento.
+- **Ajuste de Contribuições:** Edição individual dos valores pagos por cada jogador.
+- **Anti-Cache Forçado:** Configurações no cabeçalho HTTP e meta tags para garantir a entrega de dados atualizados a cada requisição.
 
 ---
 
 ## 🛠️ Tecnologias Utilizadas
 
-- **Front-end:** HTML5, JavaScript (ES6+), [Tailwind CSS (CDN)](https://tailwindcss.com/) e Font Awesome.
-- **Back-end:** PHP (PDO).
-- **Banco de Dados:** MySQL.
+- **Front-end:** HTML5, JavaScript (Vanilla ES6+), [Tailwind CSS (CDN)](https://tailwindcss.com/) e Font Awesome.
+- **Back-end:** PHP 8.x (API RESTful em JSON, PDO com prevenção contra SQL Injection).
+- **Banco de Dados:** MySQL / MariaDB.
 
 ---
 
 ## 📁 Estrutura do Projeto
 
-
 ```text
 .
-├── api.php                  # API REST (GET, POST, DELETE) para autenticação e gestão de jogadores
-├── conexao.php.example      # Exemplo de configuração de conexão com o banco de dados
-├── favicon.png              # Ícone do projeto
-├── index.html               # Interface principal e modais de gerenciamento
-├── preview_site.png         # Imagem de pré-visualização (Open Graph)
-└── schema.sql               # Estrutura e massa inicial de dados para o MySQL
-
+├── api.php                 # API REST (GET, POST, DELETE) para gestão de dados
+├── CHANGELOG.md            # Histórico de versões e atualizações do projeto
+├── conexao.php.example     # Modelo de configuração de conexão com o banco de dados
+├── favicon.png             # Ícone da aplicação
+├── index.html              # Interface SPA e modais de gerenciamento
+├── preview_site.png        # Imagem de pré-visualização (Open Graph)
+└── schema.sql              # Estrutura do banco de dados e dados iniciais
