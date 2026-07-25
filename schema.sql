@@ -1,19 +1,20 @@
-CREATE DATABASE IF NOT EXISTS `app_futsal`;
-USE `app_futsal`;
+-- Estrutura do Banco de Dados para o Futsal da Firma
 
--- Tabela de Jogadores
 CREATE TABLE IF NOT EXISTS `jogadores` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `nome` VARCHAR(100) NOT NULL
+  `nome` VARCHAR(100) NOT NULL,
+  `valor_pago` DECIMAL(10,2) DEFAULT 0.00,
+  `criado_em` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Tabela de Usuários Admin
-CREATE TABLE IF NOT EXISTS `usuarios` (
+CREATE TABLE IF NOT EXISTS `configuracoes` (
+  `chave` VARCHAR(50) PRIMARY KEY,
+  `valor` VARCHAR(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `pagamentos_quadra` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `usuario` VARCHAR(50) NOT NULL UNIQUE,
-  `senha` VARCHAR(255) NOT NULL
+  `descricao` VARCHAR(150) NOT NULL,
+  `valor` DECIMAL(10,2) NOT NULL,
+  `criado_em` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- Usuário Admin padrão (Senha: 123@Mudar)
-INSERT INTO `usuarios` (`usuario`, `senha`) 
-VALUES ('admin', '$2y$15$MN3h7.72pA63r//OvbI04uAysfMaLjaQXgyLinSSktlzU8LZYjtc.');
