@@ -81,3 +81,20 @@ api.php (Manutenção da lógica de controle de pagamentos)
 Certifique-se de substituir o arquivo index.html e api.php no servidor web.
 
 Como os arquivos possuem controle anti-cache, as mudanças serão refletidas imediatamente para os usuários.
+
+# Changelog
+
+Todas as alterações notáveis neste projeto serão documentadas neste arquivo.
+
+O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
+e este projeto adere ao [Versioning Semântico](https://semver.org/lang/pt-BR/).
+
+## [4.4.0] - 2026-07-25
+
+### Alterado
+- **Interface (UI/UX):** Ocultada a exibição da badge/rótulo de "Pendente" para jogadores sem valor pago (`R$ 0,00`) na lista pública, mantendo o visual mais limpo.
+- **Painel Admin:** Ajustada a renderização em tempo real do painel administrativo após salvar alterações, dispensando a necessidade de atualizar a página (F5).
+
+### Corrigido
+- **API Backend (`api.php`):** Ajustada a consulta SQL para utilizar o campo de data correto (`criado_em`) na tabela `pagamentos_quadra`.
+- **Tratamento de Erros:** Adicionado tratamento de exceções PDO para retornar respostas formatadas em JSON.
