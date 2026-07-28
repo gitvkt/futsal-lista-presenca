@@ -1,422 +1,1029 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="pragma" content="no-cache">
-    <meta http-equiv="expires" content="0">
+<html lang="pt-br">
 
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Futsal da Firma - Lista de Presença</title>
-    
-    <link rel="icon" type="image/png" href="favicon.png">
+    <title>Futsal da Firma</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Biblioteca QRCode.js para gerar o QR Code visualmente -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
-<body class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col justify-between">
+
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans flex flex-col justify-between">
 
     <div>
-        <header class="bg-gradient-to-r from-green-600 to-emerald-800 py-8 px-4 text-center shadow-lg relative">
-            <h1 class="text-3xl md:text-4xl font-extrabold tracking-wider uppercase drop-shadow">
-                <i class="fa-solid fa-futbol animate-bounce mr-2"></i> Futsal da Firma
-            </h1>
-            <p class="text-green-100 mt-2 font-medium">Quem vai pro jogo e quem vai participar? ⚽🔥</p>
-
-            <button onclick="abrirModalLogin()" class="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors" title="Área Restrita">
-                <i class="fa-solid fa-lock text-sm"></i>
-            </button>
-        </header>
-
-        <main class="max-w-md mx-auto mt-8 px-4 space-y-6 pb-12">
-            
-            <!-- CARD DA LISTA -->
-            <div class="bg-slate-800 rounded-2xl shadow-xl p-6 border border-slate-700">
-                <div class="flex justify-between items-center mb-6 border-b border-slate-700 pb-4">
-                    <h2 class="text-xl font-bold flex items-center gap-2 text-emerald-400">
-                        <i class="fa-solid fa-clipboard-list"></i> Lista de Confirmados
-                    </h2>
-                    <span id="contador" class="bg-emerald-500 text-slate-900 text-xs font-black px-3 py-1 rounded-full">
-                        0 Jogadores
-                    </span>
+        <!-- Header / Navbar -->
+        <header class="bg-slate-800/80 backdrop-blur-md border-b border-slate-700 sticky top-0 z-40">
+            <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-brand-500/90 text-slate-950 p-2.5 rounded-xl shadow-lg shadow-brand-500/10">
+                        <i class="fa-solid fa-futbol text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg leading-none text-slate-200">Futsal da Firma</h1>
+                        <span class="text-xs text-slate-400 font-medium">Lista de Confirmados</span>
+                    </div>
                 </div>
 
-                <ul id="listaJogadores" class="space-y-3 max-h-[350px] overflow-y-auto pr-1"></ul>
-
-                <div id="listaVazia" class="text-center py-8 text-slate-400 space-y-2">
-                    <i class="fa-solid fa-ghost text-4xl block text-slate-500"></i>
-                    <p>Ninguém confirmou ainda... <br>O campinho tá deserto!</p>
-                </div>
-            </div>
-
-            <!-- CARD PIX -->
-            <div class="bg-slate-800 rounded-2xl shadow-xl p-5 border border-slate-700 space-y-3">
-                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <i class="fa-brands fa-pix text-emerald-400 text-sm"></i> Pagamento da Rodada (Chave PIX)
-                </h3>
-                <div class="flex items-center gap-2 bg-slate-900 p-2.5 rounded-xl border border-slate-700">
-                    <input type="text" id="chavePixInput" readonly value="SUA_CHAVE_PIX_AQUI" 
-                        class="bg-transparent text-xs font-mono text-slate-300 flex-1 outline-none overflow-x-auto truncate">
-                    <button onclick="copiarChavePix()" id="btnCopiarPix" 
-                        class="bg-emerald-600 hover:bg-emerald-500 text-slate-900 text-xs font-bold px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 shrink-0">
-                        <i class="fa-solid fa-copy"></i> Copiar
+                <!-- Botões de Ação Admin -->
+                <div id="areaBotoesAdmin">
+                    <button id="btnAbrirModalAdmin" onclick="abrirModalAdmin()"
+                        class="bg-slate-700/80 hover:bg-slate-600/80 text-slate-300 text-xs px-3.5 py-2 rounded-lg font-medium transition flex items-center gap-2 border border-slate-600/80">
+                        <i class="fa-solid fa-lock text-brand-500/80"></i>
+                        <span>Área Admin</span>
+                    </button>
+                    <button id="btnLogoutAdmin" onclick="logoutAdmin()"
+                        class="hidden bg-rose-500/10 hover:bg-rose-500/20 text-rose-400/90 text-xs px-3.5 py-2 rounded-lg font-medium transition border border-rose-500/20 flex items-center gap-2">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Sair Admin</span>
                     </button>
                 </div>
-                
-                <p class="text-[11px] text-slate-400 flex items-center gap-1 pl-1">
-                    <i class="fa-solid fa-user text-slate-500 text-xs"></i> Beneficiário: <span class="text-slate-200 font-medium">NOME_DO_BENEFICIARIO</span>
-                </p>
+            </div>
+        </header>
 
-                <div class="pt-2 border-t border-slate-700/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                    <p class="text-[11px] text-amber-400 font-medium flex items-center gap-1">
-                        <i class="fa-solid fa-receipt"></i> Não esqueça de enviar o comprovante!
-                    </p>
-                    <a href="https://wa.me/5500000000000?text=Segue%20meu%20comprovante.%20Adicione%20meu%20nome%20a%20lista%20confirmada." 
-                       target="_blank" 
-                       class="bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[11px] font-bold px-2.5 py-1 rounded-lg transition-all flex items-center gap-1">
-                        <i class="fa-brands fa-whatsapp text-sm"></i> Enviar no WhatsApp
-                    </a>
+        <main class="max-w-4xl mx-auto px-4 pt-6 space-y-6">
+
+            <!-- 1. PRIMEIRO BLOCO: Lista de Confirmados -->
+            <div class="bg-slate-800/90 border border-slate-700/80 rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+                <div class="flex justify-between items-center pb-2 border-b border-slate-700/50">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-users text-brand-500/80"></i>
+                        <h3 class="font-bold text-slate-200 text-sm">Lista de Confirmados</h3>
+                    </div>
+                    <span id="totalJogadoresBadge"
+                        class="text-xs bg-slate-700/60 text-slate-300 font-medium px-3 py-1 rounded-full border border-slate-600/60">0
+                        Confirmados</span>
+                </div>
+
+                <!-- Container da Lista em <ul> -->
+                <ul id="containerListaJogadores" class="space-y-2.5">
+                    <li class="text-center py-6 text-slate-500 italic text-xs">Carregando jogadores...</li>
+                </ul>
+            </div>
+
+            <!-- Histórico de Pagamentos Quadra -->
+            <div class="bg-slate-800/90 border border-slate-700/80 rounded-2xl p-4 shadow-xl">
+                <h3 class="font-bold text-xs uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-history text-amber-500/80"></i>
+                    <span>Lançamento de Despesas Pagas</span>
+                </h3>
+                <ul id="listaPagamentosQuadra" class="space-y-2 text-xs">
+                    <!-- Renderizado via JS -->
+                </ul>
+            </div>
+
+            <!-- Cards Financeiros Resumo -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                <!-- Arrecadado -->
+                <div
+                    class="bg-slate-800/60 border border-slate-700/80 rounded-2xl p-4 flex flex-col justify-between shadow-lg">
+                    <span class="text-xs text-slate-400 font-medium flex items-center justify-between">
+                        Arrecadado
+                        <i class="fa-solid fa-wallet text-brand-500/40"></i>
+                    </span>
+                    <div class="mt-2">
+                        <span id="cardArrecadado" class="text-xl md:text-2xl font-semibold text-emerald-400/90">R$
+                            0,00</span>
+                    </div>
+                </div>
+
+                <!-- Custo Quadra -->
+                <div
+                    class="bg-slate-800/60 border border-slate-700/80 rounded-2xl p-4 flex flex-col justify-between shadow-lg">
+                    <span class="text-xs text-slate-400 font-medium flex items-center justify-between">
+                        Custo Quadra
+                        <i class="fa-solid fa-receipt text-slate-500"></i>
+                    </span>
+                    <div class="mt-2">
+                        <span id="cardCustoQuadra" class="text-xl md:text-2xl font-semibold text-slate-300">R$
+                            0,00</span>
+                    </div>
+                </div>
+
+                <!-- Pago à Quadra -->
+                <div
+                    class="bg-slate-800/60 border border-slate-700/80 rounded-2xl p-4 flex flex-col justify-between shadow-lg">
+                    <span class="text-xs text-slate-400 font-medium flex items-center justify-between">
+                        Total Pago
+                        <i class="fa-solid fa-money-bill-transfer text-amber-500/40"></i>
+                    </span>
+                    <div class="mt-2">
+                        <span id="cardPagoQuadra" class="text-xl md:text-2xl font-semibold text-amber-400/90">R$
+                            0,00</span>
+                    </div>
+                </div>
+
+                <!-- Saldo Caixa -->
+                <div
+                    class="bg-slate-800/60 border border-slate-700/80 rounded-2xl p-4 flex flex-col justify-between shadow-lg">
+                    <span class="text-xs text-slate-400 font-medium flex items-center justify-between">
+                        Saldo Caixa
+                        <i class="fa-solid fa-piggy-bank text-slate-500"></i>
+                    </span>
+                    <div class="mt-2">
+                        <span id="cardSaldo" class="text-xl md:text-2xl font-semibold text-slate-300">R$ 0,00</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- RESUMO FINANCEIRO -->
-            <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-xl p-5 border border-emerald-500/30 space-y-4">
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center gap-3">
-                        <div class="bg-emerald-500/10 p-3 rounded-xl border border-emerald-500/20 text-emerald-400">
-                            <i class="fa-solid fa-hand-holding-dollar text-2xl"></i>
-                        </div>
-                        <div>
-                            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Arrecadado</h3>
-                            <p class="text-[11px] text-slate-500">(Soma das contribuições)</p>
-                        </div>
+            <!-- PAINEL ADMIN (Modo de Gerenciamento Avançado) -->
+            <div id="painelAdmin"
+                class="hidden bg-slate-800 border border-amber-500/20 rounded-2xl p-5 space-y-6 shadow-2xl relative overflow-hidden">
+                <div class="flex items-center justify-between border-b border-slate-700/80 pb-3">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-amber-400/80"></i>
+                        <h3 class="font-bold text-amber-400/90 text-sm uppercase tracking-wide">Painel de Controle Admin
+                        </h3>
                     </div>
-                    <div class="text-right">
-                        <span id="totalArrecadado" class="text-2xl font-black text-emerald-400 font-mono">R$ 0,00</span>
+                    <span
+                        class="text-xs bg-amber-500/10 text-amber-400/90 px-2.5 py-0.5 rounded-full border border-amber-500/20 font-medium">Ativo</span>
+                </div>
+
+                <!-- Seção 1: Operações Básicas -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Add Jogador -->
+                    <form onsubmit="adicionarJogador(event)" class="space-y-1.5">
+                        <label class="text-xs text-slate-300 font-medium block">Adicionar Jogador</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="novoJogadorNome" placeholder="Nome do jogador" required
+                                class="bg-slate-900 border border-slate-700/80 text-xs rounded-xl px-3 py-2 text-slate-300 w-full focus:outline-none focus:border-amber-500/50 transition">
+                            <button type="submit"
+                                class="bg-amber-500/80 hover:bg-amber-500 text-slate-950 font-bold px-3.5 py-2 rounded-xl text-xs transition">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Set Custo Quadra -->
+                    <form onsubmit="salvarCustoQuadra(event)" class="space-y-1.5">
+                        <label class="text-xs text-slate-300 font-medium block">Valor da Quadra (R$)</label>
+                        <div class="flex gap-2">
+                            <input type="number" step="0.01" id="inputCustoQuadra" placeholder="200.00" required
+                                class="bg-slate-900 border border-slate-700/80 text-xs rounded-xl px-3 py-2 text-slate-300 w-full focus:outline-none focus:border-amber-500/50 transition">
+                            <button type="submit"
+                                class="bg-amber-500/80 hover:bg-amber-500 text-slate-950 font-bold px-3.5 py-2 rounded-xl text-xs transition">
+                                <i class="fa-solid fa-floppy-disk"></i>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Pagar Parcela Quadra -->
+                    <form onsubmit="pagarParcelaQuadra(event)" class="space-y-1.5">
+                        <label class="text-xs text-slate-300 font-medium block">Pagar Quadra (R$)</label>
+                        <div class="flex gap-2">
+                            <input type="number" step="0.01" id="inputValorParcela" placeholder="Valor pago" required
+                                class="bg-slate-900 border border-slate-700/80 text-xs rounded-xl px-3 py-2 text-slate-300 w-full focus:outline-none focus:border-amber-500/50 transition">
+                            <button type="submit"
+                                class="bg-amber-500/80 hover:bg-amber-500 text-slate-950 font-bold px-3.5 py-2 rounded-xl text-xs transition">
+                                <i class="fa-solid fa-hand-holding-dollar"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <hr class="border-slate-700/60">
+
+                <!-- Seção: Controle de Inadimplência e Pendências -->
+                <div class="space-y-3">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                        <i class="fa-solid fa-triangle-exclamation text-rose-400"></i>
+                        <span>Pagamentos Pendentes</span>
+                    </h4>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Não pagaram na etapa atual -->
+                        <div class="bg-slate-900/60 border border-slate-700/60 rounded-xl p-3 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-medium text-rose-400/90">Não Pagaram Nesta Etapa</span>
+                                <span id="badgeNaoPagantesEtapa"
+                                    class="bg-rose-500/10 text-rose-400 px-2 py-0.5 rounded-full text-[10px]">0</span>
+                            </div>
+                            <ul id="listaNaoPagantesEtapa" class="space-y-1.5 text-xs max-h-40 overflow-y-auto">
+                                <li class="text-slate-500 italic">Nenhum pendente na etapa.</li>
+                            </ul>
+                        </div>
+
+                        <!-- Histórico de Pendências Acumuladas -->
+                        <div class="bg-slate-900/60 border border-slate-700/60 rounded-xl p-3 space-y-2">
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-medium text-amber-400/90">Histórico de Pendências
+                                    (Acumulado)</span>
+                                <span id="badgePendenciasAcumuladas"
+                                    class="bg-amber-500/10 text-amber-400 px-2 py-0.5 rounded-full text-[10px]">0</span>
+                            </div>
+                            <ul id="listaPendenciasAcumuladas" class="space-y-1.5 text-xs max-h-40 overflow-y-auto">
+                                <li class="text-slate-500 italic">Nenhum histórico de dívida pendente.</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
-                <div class="space-y-2 border-t border-slate-700/60 pt-3 text-xs">
-                    <div class="flex justify-between items-center">
-                        <span class="text-slate-400">Custo da Quadra:</span>
-                        <span id="valorQuadraExibicao" class="font-mono text-slate-200 font-bold">R$ 0,00</span>
+                <hr class="border-slate-700/60">
+
+                <!-- Seção 2: Configurações de Contato & PIX -->
+                <div class="space-y-2">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                        <i class="fa-solid fa-gear text-amber-400"></i>
+                        <span>Configurações PIX & WhatsApp</span>
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Salvar Chave PIX -->
+                        <form onsubmit="salvarChavePix(event)"
+                            class="space-y-1.5 bg-slate-900/40 p-3 rounded-xl border border-slate-700/50">
+                            <label class="text-xs text-slate-300 font-medium block">Chave PIX</label>
+                            <div class="flex gap-2">
+                                <input type="text" id="inputChavePix" placeholder="CPF, E-mail, Telefone ou Aleatória"
+                                    required
+                                    class="bg-slate-900 border border-slate-700/80 text-xs rounded-xl px-3 py-2 text-slate-300 w-full focus:outline-none focus:border-amber-500/50 transition">
+                                <button type="submit"
+                                    class="bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold px-3 py-2 rounded-xl text-xs transition">
+                                    <i class="fa-solid fa-floppy-disk"></i>
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Salvar WhatsApp -->
+                        <form onsubmit="salvarWhatsapp(event)"
+                            class="space-y-1.5 bg-slate-900/40 p-3 rounded-xl border border-slate-700/50">
+                            <div class="flex items-center justify-between">
+                                <label class="text-xs text-slate-300 font-medium block">WhatsApp Comprovantes</label>
+                                <span class="text-[10px] text-slate-400">Ex: 55 + DDD + Número</span>
+                            </div>
+
+                            <div class="flex gap-2">
+                                <input type="text" id="inputWhatsapp" placeholder="55 + DDD + Número" required
+                                    class="bg-slate-900 border border-slate-700/80 text-xs rounded-xl px-3 py-2 text-slate-300 w-full focus:outline-none focus:border-amber-500/50 transition">
+                                <button type="submit"
+                                    class="bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold px-3 py-2 rounded-xl text-xs transition">
+                                    <i class="fa-solid fa-floppy-disk"></i>
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-slate-400">Pago à Quadra (Etapas):</span>
-                        <span id="totalPagoExibicao" class="font-mono text-amber-400 font-bold">R$ 0,00</span>
+                </div>
+
+                <hr class="border-slate-700/60">
+
+                <!-- Seção 3: Gestão de Etapas e Saldo do Caixa -->
+                <div class="space-y-2">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                        <i class="fa-solid fa-arrows-rotate text-emerald-400"></i>
+                        <span>Ciclo do Evento / Etapa</span>
+                    </h4>
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="finalizarEtapa()"
+                            class="bg-emerald-600/90 hover:bg-emerald-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition flex items-center gap-2 shadow-lg">
+                            <i class="fa-solid fa-check-double"></i>
+                            <span>FINALIZAR ETAPA</span>
+                        </button>
+                        <button onclick="zerarCaixa()"
+                            class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-medium text-xs px-4 py-2.5 rounded-xl border border-rose-500/30 transition flex items-center gap-2">
+                            <i class="fa-solid fa-trash-arrow-up"></i>
+                            <span>Zerar Saldo Caixa</span>
+                        </button>
                     </div>
-                    <div class="flex justify-between items-center pt-2 border-t border-slate-800">
-                        <span class="text-slate-300 font-bold">Saldo do Caixa:</span>
-                        <span id="saldoCaixa" class="font-mono text-base font-black">R$ 0,00</span>
+                </div>
+
+                <hr class="border-slate-700/60">
+
+                <!-- Seção 4: Gestão de Administradores -->
+                <div class="space-y-3">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                        <i class="fa-solid fa-user-gear text-amber-400"></i>
+                        <span>Gestão de Acesso Admin</span>
+                    </h4>
+
+                    <div class="bg-slate-900/60 border border-slate-700/60 rounded-xl p-3 space-y-2">
+                        <span class="text-xs font-medium text-slate-400 block mb-1">Administradores Cadastrados:</span>
+                        <ul id="listaAdmins" class="space-y-1.5 text-xs"></ul>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+                        <form onsubmit="alterarMinhaSenha(event)"
+                            class="space-y-2 bg-slate-900/40 p-3 rounded-xl border border-slate-700/50">
+                            <span class="text-xs font-medium text-slate-300 block">Alterar Minha Senha</span>
+                            <div class="flex gap-2">
+                                <input type="password" id="novaSenhaInput" placeholder="Nova senha" required
+                                    class="bg-slate-900 border border-slate-700/80 text-xs rounded-xl px-3 py-2 text-slate-300 w-full focus:outline-none focus:border-amber-500/50 transition">
+                                <button type="submit"
+                                    class="bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold px-3 py-2 rounded-xl text-xs transition">
+                                    <i class="fa-solid fa-key"></i>
+                                </button>
+                            </div>
+                        </form>
+
+                        <form onsubmit="cadastrarNovoAdmin(event)"
+                            class="space-y-2 bg-slate-900/40 p-3 rounded-xl border border-slate-700/50">
+                            <span class="text-xs font-medium text-slate-300 block">Cadastrar Novo Admin</span>
+                            <div class="flex gap-2">
+                                <input type="text" id="novoAdminUser" placeholder="Usuário" required
+                                    class="bg-slate-900 border border-slate-700/80 text-xs rounded-xl px-2.5 py-2 text-slate-300 w-1/2 focus:outline-none focus:border-amber-500/50 transition">
+                                <input type="password" id="novoAdminPass" placeholder="Senha" required
+                                    class="bg-slate-900 border border-slate-700/80 text-xs rounded-xl px-2.5 py-2 text-slate-300 w-1/2 focus:outline-none focus:border-amber-500/50 transition">
+                                <button type="submit"
+                                    class="bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold px-3 py-2 rounded-xl text-xs transition">
+                                    <i class="fa-solid fa-user-plus"></i>
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
+
+            <!-- Banner Pix & Pagamento com QR Code Integrado -->
+            <div
+                class="bg-gradient-to-r from-slate-800 via-slate-800 to-brand-950/30 border border-slate-700/80 rounded-2xl p-5 shadow-xl relative overflow-hidden">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative z-10">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span
+                                class="bg-brand-500/10 text-brand-400/90 text-xs px-2.5 py-0.5 rounded-full border border-brand-500/20 font-medium uppercase tracking-wider">Pagamento</span>
+                        </div>
+                        <h2 class="text-xl font-bold text-slate-200">Chave PIX da Pelada</h2>
+                        <p class="text-xs text-slate-400">Pague com antecedência para garantir a quadra!</p>
+
+                        <div class="pt-3 flex flex-wrap sm:flex-nowrap gap-2">
+                            <button onclick="copiarPix()"
+                                class="bg-brand-600/90 hover:bg-brand-600 text-slate-100 font-medium px-4 py-2.5 rounded-xl transition text-xs flex items-center justify-center gap-2 shadow-md w-full sm:w-auto">
+                                <i class="fa-regular fa-copy"></i>
+                                <span id="txtBtnPix">Copiar Chave PIX</span>
+                            </button>
+                            <a id="btnLinkWhatsapp" href="#" target="_blank"
+                                class="bg-slate-700/80 hover:bg-slate-600/80 text-slate-300 font-medium px-4 py-2.5 rounded-xl transition text-xs flex items-center justify-center gap-2 border border-slate-600/80 w-full sm:w-auto">
+                                <i class="fa-brands fa-whatsapp text-brand-400/80 text-sm"></i>
+                                <span>Enviar Comprovante</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Container Visual do QR Code -->
+                    <div
+                        class="flex flex-col items-center justify-center bg-slate-900/60 p-3 rounded-2xl border border-slate-700/60 mx-auto md:mx-0">
+                        <div id="qrcode" class="bg-white p-2 rounded-xl shadow-md"></div>
+                        <span class="text-[10px] text-slate-400 mt-2 font-medium">Escaneie para Pagar</span>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
 
-    <!-- RODAPÉ -->
-    <footer class="bg-slate-950/80 border-t border-slate-800/80 py-4 px-4 text-center text-xs text-slate-500 flex flex-col sm:flex-row justify-center items-center gap-3">
-        <p>Desenvolvido por <span class="font-semibold text-slate-300">Seu Nome</span></p>
-        <div class="flex items-center gap-3 text-slate-400">
-            <a href="#" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-400 transition-colors" title="Website"><i class="fa-solid fa-globe text-sm"></i></a>
-            <a href="#" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-400 transition-colors" title="GitHub"><i class="fa-brands fa-github text-sm"></i></a>
-            <a href="#" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-400 transition-colors" title="LinkedIn"><i class="fa-brands fa-linkedin text-sm"></i></a>
+    <!-- FOOTER COM CRÉDITOS E REDES SOCIAIS -->
+    <footer class="mt-12 border-t border-slate-800 bg-slate-950/50 py-6">
+        <div
+            class="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-400">
+            <div class="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+                <p>&copy; Futsal da Firma - Gestão Transparente</p>
+                <span class="hidden sm:inline text-slate-600">|</span>
+                <p>Desenvolvido por <span class="font-medium text-slate-300">Deivid - VKT CLOUD</span></p>
+            </div>
+
+            <div class="flex items-center gap-4 text-slate-400">
+                <a href="https://vktcloud.com.br/" target="_blank" rel="noopener noreferrer"
+                    class="hover:text-brand-400 transition-colors" title="Website">
+                    <i class="fa-solid fa-globe text-sm"></i>
+                </a>
+                <a href="https://github.com/gitvkt" target="_blank" rel="noopener noreferrer"
+                    class="hover:text-brand-400 transition-colors" title="GitHub">
+                    <i class="fa-brands fa-github text-sm"></i>
+                </a>
+                <a href="https://linkedin.com/in/viquiato" target="_blank" rel="noopener noreferrer"
+                    class="hover:text-brand-400 transition-colors" title="LinkedIn">
+                    <i class="fa-brands fa-linkedin text-sm"></i>
+                </a>
+                <a href="https://instagram.com/vktsistemas" target="_blank" rel="noopener noreferrer"
+                    class="hover:text-brand-400 transition-colors" title="Instagram">
+                    <i class="fa-brands fa-instagram text-sm"></i>
+                </a>
+            </div>
         </div>
     </footer>
 
-    <!-- MODAL LOGIN -->
-    <div id="modalLogin" class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 hidden backdrop-blur-sm z-50">
-        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-sm relative shadow-2xl">
-            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-shield-halved text-emerald-500"></i> Área do Admin
-            </h3>
-            <div class="space-y-4">
-                <input type="password" id="senhaInput" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-emerald-500" placeholder="Digite a senha...">
-                <div class="flex gap-2">
-                    <button onclick="fecharModalLogin()" class="w-1/2 bg-slate-700 hover:bg-slate-600 font-bold py-2 rounded-lg">Cancelar</button>
-                    <button onclick="autenticar()" class="w-1/2 bg-emerald-600 hover:bg-emerald-500 font-bold py-2 rounded-lg text-slate-900">Entrar</button>
+    <!-- Modal Admin (Login) -->
+    <div id="modalLogin"
+        class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center hidden p-4 z-50">
+        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-sm space-y-4 shadow-2xl relative">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-shield-halved text-brand-500/80"></i>
+                    <h3 class="font-bold text-slate-200 text-base">Autenticação Admin</h3>
                 </div>
+                <button onclick="fecharModalAdmin()" class="text-slate-400 hover:text-slate-200 transition">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
             </div>
+
+            <form onsubmit="autenticarAdmin(event)" class="space-y-3">
+                <div>
+                    <label class="text-xs text-slate-400 font-medium block mb-1">Usuário</label>
+                    <input type="text" id="adminUsuarioInput" placeholder="Digite o usuário" required
+                        class="bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2.5 text-slate-300 text-xs w-full focus:outline-none focus:border-brand-500/50 transition">
+                </div>
+
+                <div>
+                    <label class="text-xs text-slate-400 font-medium block mb-1">Senha</label>
+                    <input type="password" id="adminSenhaInput" placeholder="Digite a senha" required
+                        class="bg-slate-900 border border-slate-700/80 rounded-xl px-3 py-2.5 text-slate-300 text-xs w-full focus:outline-none focus:border-brand-500/50 transition">
+                </div>
+
+                <p id="erroLogin"
+                    class="text-xs text-rose-400/90 hidden font-medium bg-rose-500/10 p-2 rounded-lg border border-rose-500/20">
+                </p>
+
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="fecharModalAdmin()"
+                        class="px-4 py-2 text-xs font-medium text-slate-400 hover:text-slate-200 transition">Cancelar</button>
+                    <button type="submit"
+                        class="bg-brand-600/90 hover:bg-brand-600 text-slate-100 font-medium px-4 py-2.5 rounded-xl text-xs transition">Acessar</button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- MODAL PAINEL ADMIN -->
-    <div id="modalPainel" class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 hidden backdrop-blur-sm z-50 overflow-y-auto">
-        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-6 w-full max-w-md relative shadow-2xl space-y-5 my-8">
-            <div class="flex justify-between items-center">
-                <h3 class="text-lg font-bold text-emerald-400 flex items-center gap-2">
-                    <i class="fa-solid fa-gear"></i> Painel de Controle
-                </h3>
-                <button onclick="fecharPainel()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
-            </div>
-
-            <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
-                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Adicionar Jogador</label>
-                <div class="flex gap-2">
-                    <input type="text" id="nomeJogador" class="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-emerald-500" placeholder="Nome do jogador...">
-                    <input type="number" step="0.01" id="valorJogadorInicial" class="w-24 bg-slate-800 border border-slate-700 rounded-lg px-2 py-2 text-white text-xs font-mono focus:outline-none focus:border-emerald-500" placeholder="R$ 20.00" value="20.00">
-                    <button onclick="adicionarJogador()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-black px-4 rounded-lg"><i class="fa-solid fa-plus"></i></button>
-                </div>
-            </div>
-
-            <div class="bg-slate-900 p-4 rounded-xl border border-slate-700">
-                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Custo Total da Quadra (R$)</label>
-                <div class="flex gap-2">
-                    <input type="number" step="0.01" id="valorQuadraInput" class="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-emerald-500 font-mono" placeholder="Ex: 200.00">
-                    <button onclick="salvarValorQuadra()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-900 font-bold px-4 rounded-lg text-xs">Salvar</button>
-                </div>
-            </div>
-
-            <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 space-y-3">
-                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">Lançar Pagamento da Quadra (Parcelas)</label>
-                <div class="flex gap-2">
-                    <input type="text" id="descParcelaInput" class="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white text-xs focus:outline-none focus:border-emerald-500" placeholder="Ex: Sinal / 1ª Parcela">
-                    <input type="number" step="0.01" id="valorParcelaInput" class="w-24 bg-slate-800 border border-slate-700 rounded-lg px-2 py-2 text-white text-xs font-mono focus:outline-none focus:border-emerald-500" placeholder="R$ Valor">
-                    <button onclick="pagarParcela()" class="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-3 rounded-lg text-xs">Lançar</button>
-                </div>
-                <ul id="listaParcelas" class="space-y-1.5 pt-2 max-h-[120px] overflow-y-auto border-t border-slate-800"></ul>
-            </div>
-
-            <div>
-                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Gerenciar Jogadores & Contribuições</label>
-                <ul id="listaGerenciar" class="space-y-2 max-h-[220px] overflow-y-auto pr-1"></ul>
-            </div>
-        </div>
-    </div>
-
+    <!-- JavaScript Principal -->
     <script>
         const API_URL = 'api.php';
-        const SENHA_SECRETA = "SUA_SENHA_ADMIN_AQUI";
-        
-        let jogadores = [];
-        let valorQuadra = 0.00;
-        let pagamentosQuadra = [];
-        let totalPagoQuadra = 0.00;
+        let chavePixAtual = '';
+        let whatsappAtual = '';
 
-        document.addEventListener('DOMContentLoaded', carregarDados);
+        let isAdmin = false;
+        let usuarioLogado = '';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarDados();
+        });
+
+        function gerarQRCodePix(chave) {
+            const container = document.getElementById('qrcode');
+            container.innerHTML = '';
+
+            if (!chave) {
+                container.innerHTML = '<span class="text-[10px] text-slate-400 p-2 text-center">Chave não informada</span>';
+                return;
+            }
+
+            try {
+                new QRCode(container, {
+                    text: chave,
+                    width: 110,
+                    height: 110,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+            } catch (e) {
+                console.error("Erro ao gerar QR Code:", e);
+            }
+        }
+
+        function copiarPix() {
+            if (!chavePixAtual) {
+                alert('Nenhuma chave PIX cadastrada.');
+                return;
+            }
+            navigator.clipboard.writeText(chavePixAtual);
+            const btn = document.getElementById('txtBtnPix');
+            btn.innerText = 'Chave Copiada!';
+            setTimeout(() => { btn.innerText = 'Copiar Chave PIX'; }, 2000);
+        }
+
+        function abrirModalAdmin() {
+            document.getElementById('erroLogin').classList.add('hidden');
+            document.getElementById('adminSenhaInput').value = '';
+            document.getElementById('modalLogin').classList.remove('hidden');
+        }
+
+        function fecharModalAdmin() {
+            document.getElementById('modalLogin').classList.add('hidden');
+        }
+
+        async function autenticarAdmin(event) {
+            event.preventDefault();
+            const usuarioInput = document.getElementById('adminUsuarioInput').value;
+            const senhaInput = document.getElementById('adminSenhaInput').value;
+            const erroEl = document.getElementById('erroLogin');
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        acao: 'login',
+                        usuario: usuarioInput,
+                        senha: senhaInput
+                    })
+                });
+
+                const resultado = await response.json();
+
+                if (response.ok && resultado.sucesso) {
+                    isAdmin = true;
+                    usuarioLogado = resultado.usuario;
+                    fecharModalAdmin();
+                    atualizarInterfaceAdmin();
+                    carregarDados();
+                } else {
+                    erroEl.innerText = resultado.mensagem || 'Usuário ou senha incorretos.';
+                    erroEl.classList.remove('hidden');
+                }
+            } catch (err) {
+                erroEl.innerText = 'Erro ao conectar com o servidor.';
+                erroEl.classList.remove('hidden');
+            }
+        }
+
+        async function logoutAdmin() {
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ acao: 'logout' })
+                });
+            } catch (e) {
+                console.error("Erro ao fazer logout", e);
+            }
+            isAdmin = false;
+            usuarioLogado = '';
+            atualizarInterfaceAdmin();
+            carregarDados();
+        }
+
+        function atualizarInterfaceAdmin() {
+            const painel = document.getElementById('painelAdmin');
+            const btnModal = document.getElementById('btnAbrirModalAdmin');
+            const btnLogout = document.getElementById('btnLogoutAdmin');
+
+            if (isAdmin) {
+                painel.classList.remove('hidden');
+                btnModal.classList.add('hidden');
+                btnLogout.classList.remove('hidden');
+            } else {
+                painel.classList.add('hidden');
+                btnModal.classList.remove('hidden');
+                btnLogout.classList.add('hidden');
+            }
+        }
+
+        // Intercepta respostas proibidas (403) para forçar o fechamento visual do painel caso a sessão caia no servidor
+        async function fetchSeguro(url, options) {
+            const resposta = await fetch(url, options);
+            if (resposta.status === 403) {
+                alert("Sessão expirada. Faça login novamente.");
+                isAdmin = false;
+                atualizarInterfaceAdmin();
+                carregarDados();
+                throw new Error("Acesso Negado");
+            }
+            return resposta;
+        }
 
         async function carregarDados() {
             try {
                 const res = await fetch(API_URL);
+                if (!res.ok) {
+                    throw new Error(`Erro na requisição API: ${res.status}`);
+                }
+
                 const data = await res.json();
-                
-                jogadores = data.jogadores || [];
-                valorQuadra = parseFloat(data.valor_quadra) || 0.00;
-                pagamentosQuadra = data.pagamentos_quadra || [];
-                totalPagoQuadra = parseFloat(data.total_pago_quadra) || 0.00;
 
-                renderizarLista();
-                renderizarPainelGerenciamento();
+                // Valida a sessão no servidor
+                if (data.sessao_ativa) {
+                    isAdmin = true;
+                } else {
+                    isAdmin = false;
+                }
+                atualizarInterfaceAdmin();
+
+                chavePixAtual = data.chave_pix || '';
+                whatsappAtual = data.whatsapp || '';
+
+                gerarQRCodePix(chavePixAtual);
+
+                const inputPix = document.getElementById('inputChavePix');
+                if (inputPix) inputPix.value = chavePixAtual;
+
+                const inputWa = document.getElementById('inputWhatsapp');
+                if (inputWa) inputWa.value = whatsappAtual;
+
+                const linkWa = document.getElementById('btnLinkWhatsapp');
+                if (whatsappAtual) {
+                    linkWa.href = `https://wa.me/${whatsappAtual}?text=Comprovante%20do%20Futsal`;
+                } else {
+                    linkWa.href = '#';
+                    linkWa.onclick = (e) => {
+                        if (!whatsappAtual) {
+                            e.preventDefault();
+                            alert('Número de WhatsApp ainda não cadastrado.');
+                        }
+                    };
+                }
+
+                let totalArrecadado = 0;
+                const containerLista = document.getElementById('containerListaJogadores');
+                containerLista.innerHTML = '';
+
+                if (!data.jogadores || data.jogadores.length === 0) {
+                    containerLista.innerHTML = `<li class="text-center py-6 text-slate-500 italic text-xs">Nenhum jogador cadastrado para esta etapa.</li>`;
+                } else {
+                    data.jogadores.forEach((jog, index) => {
+                        const valorPago = parseFloat(jog.valor_pago || 0);
+                        totalArrecadado += valorPago;
+
+                        const li = document.createElement('li');
+                        li.className = 'flex items-center gap-3 bg-slate-700/40 px-4 py-3 rounded-xl border border-slate-700/60';
+
+                        let badgeValor = valorPago > 0
+                            ? `<span class="text-xs px-2.5 py-1 rounded-full font-mono font-bold text-emerald-400 bg-emerald-500/10">R$ ${valorPago.toFixed(2).replace('.', ',')}</span>`
+                            : ``;
+
+                        let acoesAdmin = '';
+                        if (isAdmin) {
+                            acoesAdmin = `
+                                <div class="flex items-center gap-1 ml-2 border-l border-slate-700/60 pl-2">
+                                    <button onclick="editarValorJogador(${jog.id}, ${valorPago})" class="text-amber-400/80 hover:text-amber-300 p-1 rounded hover:bg-slate-700/50 transition" title="Editar Valor">
+                                        <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                    </button>
+                                    <button onclick="removerJogador(${jog.id})" class="text-rose-400/80 hover:text-rose-300 p-1 rounded hover:bg-slate-700/50 transition" title="Remover">
+                                        <i class="fa-solid fa-trash text-xs"></i>
+                                    </button>
+                                </div>
+                            `;
+                        }
+
+                        li.innerHTML = `
+                            <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">${index + 1}º</span>
+                            <span class="font-medium text-slate-200 flex-1">${jog.nome}</span>
+                            <div class="flex items-center">
+                                ${badgeValor}
+                                ${acoesAdmin}
+                            </div>
+                        `;
+                        containerLista.appendChild(li);
+                    });
+                }
+
+                const listaNaoPagantes = document.getElementById('listaNaoPagantesEtapa');
+                listaNaoPagantes.innerHTML = '';
+                const naoPagantes = data.jogadores ? data.jogadores.filter(j => parseFloat(j.valor_pago || 0) === 0) : [];
+                document.getElementById('badgeNaoPagantesEtapa').innerText = naoPagantes.length;
+
+                if (naoPagantes.length === 0) {
+                    listaNaoPagantes.innerHTML = `<li class="text-slate-500 italic">Todos já pagaram nesta etapa! 🎉</li>`;
+                } else {
+                    naoPagantes.forEach(jog => {
+                        const li = document.createElement('li');
+                        li.className = 'flex justify-between items-center bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/60';
+                        li.innerHTML = `
+                            <span class="text-slate-200 font-medium">${jog.nome}</span>
+                            <button onclick="editarValorJogador(${jog.id}, 0)" class="text-xs bg-brand-500/10 text-brand-400 hover:bg-brand-500/20 px-2 py-1 rounded transition">
+                                Dar Baixa
+                            </button>
+                        `;
+                        listaNaoPagantes.appendChild(li);
+                    });
+                }
+
+                // Renderiza Histórico de Pendências Acumuladas
+                const listaPendencias = document.getElementById('listaPendenciasAcumuladas');
+                listaPendencias.innerHTML = '';
+                const pendencias = data.pendencias_acumuladas || data.pendencias || [];
+                document.getElementById('badgePendenciasAcumuladas').innerText = pendencias.length;
+
+                if (pendencias.length === 0) {
+                    listaPendencias.innerHTML = `<li class="text-slate-500 italic">Nenhum histórico de dívida pendente.</li>`;
+                } else {
+                    pendencias.forEach(pend => {
+                        const valorDevido = parseFloat(pend.valor_devido || pend.valor || 0);
+                        const li = document.createElement('li');
+                        li.className = 'flex justify-between items-center bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/60';
+
+                        let acoesPendencia = '';
+                        if (isAdmin) {
+                            acoesPendencia = `
+                                <div class="flex items-center gap-1">
+                                    <button onclick="quitarPendencia(${pend.id}, '${pend.nome}', ${valorDevido})" class="text-xs bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 px-2 py-1 rounded transition flex items-center gap-1">
+                                        <i class="fa-solid fa-check"></i> Quitar
+                                    </button>
+                                    <button onclick="removerPendencia(${pend.id})" class="text-rose-400 hover:text-rose-300 p-1 rounded transition" title="Excluir">
+                                        <i class="fa-solid fa-trash text-xs"></i>
+                                    </button>
+                                </div>
+                            `;
+                        } else {
+                            acoesPendencia = `<span class="text-[10px] bg-amber-500/10 text-amber-300 px-2 py-0.5 rounded">Pendente</span>`;
+                        }
+
+                        li.innerHTML = `
+                            <div>
+                                <span class="text-slate-200 font-medium block">${pend.nome}</span>
+                                <span class="text-[10px] text-rose-400 font-mono">Deve: R$ ${valorDevido.toFixed(2).replace('.', ',')}</span>
+                            </div>
+                            ${acoesPendencia}
+                        `;
+                        listaPendencias.appendChild(li);
+                    });
+                }
+
+                document.getElementById('totalJogadoresBadge').innerText = `${data.jogadores ? data.jogadores.length : 0} Confirmados`;
+                document.getElementById('cardArrecadado').innerText = `R$ ${totalArrecadado.toFixed(2)}`;
+                document.getElementById('cardCustoQuadra').innerText = `R$ ${parseFloat(data.valor_quadra || 0).toFixed(2)}`;
+                document.getElementById('cardPagoQuadra').innerText = `R$ ${parseFloat(data.total_pago_quadra || 0).toFixed(2)}`;
+
+                const saldoAcumulado = parseFloat(data.saldo_acumulado || 0);
+                const saldoTotalCaixa = (saldoAcumulado + totalArrecadado) - parseFloat(data.total_pago_quadra || 0);
+
+                const elSaldo = document.getElementById('cardSaldo');
+                elSaldo.innerText = `R$ ${saldoTotalCaixa.toFixed(2)}`;
+                elSaldo.className = saldoTotalCaixa >= 0 ? 'text-xl md:text-2xl font-semibold text-emerald-400/90' : 'text-xl md:text-2xl font-semibold text-rose-400/90';
+
+                const listaPag = document.getElementById('listaPagamentosQuadra');
+                listaPag.innerHTML = '';
+                if (!data.pagamentos_quadra || data.pagamentos_quadra.length === 0) {
+                    listaPag.innerHTML = `<li class="text-slate-500 italic p-2">Nenhum pagamento efetuado até o momento nesta etapa.</li>`;
+                } else {
+                    data.pagamentos_quadra.forEach(pag => {
+                        const li = document.createElement('li');
+                        li.className = 'flex justify-between items-center bg-slate-900/40 px-3 py-2 rounded-xl border border-slate-700/40';
+
+                        let btnDel = isAdmin ? `<button onclick="removerPagamentoQuadra(${pag.id})" class="text-rose-400/80 hover:text-rose-300 text-xs ml-2"><i class="fa-solid fa-xmark"></i></button>` : '';
+
+                        li.innerHTML = `
+                            <span class="text-slate-300">${pag.descricao || 'Pagamento Quadra'}</span>
+                            <div class="flex items-center">
+                                <span class="font-medium text-amber-400/90">R$ ${parseFloat(pag.valor || 0).toFixed(2)}</span>
+                                ${btnDel}
+                            </div>
+                        `;
+                        listaPag.appendChild(li);
+                    });
+                }
+
+                renderizarAdmins(data.administradores || []);
+
             } catch (err) {
-                console.error("Erro ao carregar dados:", err);
+                console.error('Erro ao carregar dados:', err);
+                const containerLista = document.getElementById('containerListaJogadores');
+                containerLista.innerHTML = `<li class="text-center py-4 text-rose-400/80 italic text-xs">Erro ao carregar dados do servidor.</li>`;
             }
         }
 
-        function copiarChavePix() {
-            const inputChave = document.getElementById('chavePixInput');
-            const btn = document.getElementById('btnCopiarPix');
-            navigator.clipboard.writeText(inputChave.value).then(() => {
-                btn.innerHTML = `<i class="fa-solid fa-check"></i> Copiado!`;
-                setTimeout(() => { btn.innerHTML = `<i class="fa-solid fa-copy"></i> Copiar`; }, 2000);
-            });
-        }
+        function renderizarAdmins(admins) {
+            const ul = document.getElementById('listaAdmins');
+            ul.innerHTML = '';
 
-        function abrirModalLogin() {
-            document.getElementById('senhaInput').value = '';
-            document.getElementById('modalLogin').classList.remove('hidden');
-        }
-        function fecharModalLogin() { document.getElementById('modalLogin').classList.add('hidden'); }
-        function fecharPainel() { document.getElementById('modalPainel').classList.add('hidden'); }
-
-        function autenticar() {
-            if (document.getElementById('senhaInput').value === SENHA_SECRETA) {
-                fecharModalLogin();
-                document.getElementById('valorQuadraInput').value = valorQuadra.toFixed(2);
-                renderizarPainelGerenciamento();
-                document.getElementById('modalPainel').classList.remove('hidden');
-            } else {
-                alert("Senha incorreta!");
-            }
-        }
-
-        async function adicionarJogador() {
-            const input = document.getElementById('nomeJogador');
-            const valorInput = document.getElementById('valorJogadorInicial');
-            const nome = input.value.trim();
-            const valor = parseFloat(valorInput.value) || 0.00;
-
-            if (!nome) return;
-
-            await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nome: nome, valor_pago: valor })
-            });
-
-            input.value = "";
-            valorInput.value = "20.00";
-            await carregarDados();
-        }
-
-        async function editarValorJogador(id) {
-            const valorInput = parseFloat(document.getElementById(`valorInput_${id}`).value) || 0.00;
-            
-            await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ acao: 'editar_jogador', id: id, valor: valorInput })
-            });
-
-            await carregarDados();
-        }
-
-        async function removerJogador(id, nome) {
-            if (confirm(`Remover ${nome} da lista?`)) {
-                await fetch(API_URL, {
-                    method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id: id })
-                });
-                await carregarDados();
-            }
-        }
-
-        async function salvarValorQuadra() {
-            const valorInput = parseFloat(document.getElementById('valorQuadraInput').value) || 0.00;
-            await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ acao: 'salvar_quadra', valor: valorInput })
-            });
-            await carregarDados();
-            alert("Valor total da quadra atualizado!");
-        }
-
-        async function pagarParcela() {
-            const desc = document.getElementById('descParcelaInput').value.trim() || 'Parcela Quadra';
-            const valor = parseFloat(document.getElementById('valorParcelaInput').value) || 0;
-
-            if (valor <= 0) {
-                alert("Digite um valor válido para a parcela.");
+            if (admins.length === 0) {
+                ul.innerHTML = `<li class="text-slate-500 italic">Nenhum administrador cadastrado.</li>`;
                 return;
             }
 
-            await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ acao: 'pagar_parcela', valor: valor, descricao: desc })
-            });
-
-            document.getElementById('descParcelaInput').value = '';
-            document.getElementById('valorParcelaInput').value = '';
-            await carregarDados();
-        }
-
-        async function removerParcela(id) {
-            if (confirm("Deseja cancelar este lançamento de pagamento?")) {
-                await fetch(API_URL, {
-                    method: 'DELETE',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ tipo: 'parcela', id: id })
-                });
-                await carregarDados();
-            }
-        }
-
-        function renderizarLista() {
-            const lista = document.getElementById('listaJogadores');
-            const listaVazia = document.getElementById('listaVazia');
-            const contador = document.getElementById('contador');
-            const totalTexto = document.getElementById('totalArrecadado');
-            const valorQuadraTexto = document.getElementById('valorQuadraExibicao');
-            const totalPagoTexto = document.getElementById('totalPagoExibicao');
-            const saldoTexto = document.getElementById('saldoCaixa');
-            
-            lista.innerHTML = "";
-            const totalJogadores = jogadores.length;
-
-            const totalArrecadado = jogadores.reduce((acc, j) => acc + (parseFloat(j.valor_pago) || 0), 0);
-            const saldo = totalArrecadado - totalPagoQuadra;
-
-            contador.textContent = `${totalJogadores} Jogador${totalJogadores !== 1 ? 'es' : ''}`;
-            totalTexto.textContent = `R$ ${totalArrecadado.toFixed(2).replace('.', ',')}`;
-            valorQuadraTexto.textContent = `R$ ${valorQuadra.toFixed(2).replace('.', ',')}`;
-            totalPagoTexto.textContent = `R$ ${totalPagoQuadra.toFixed(2).replace('.', ',')}`;
-            
-            saldoTexto.textContent = `R$ ${saldo.toFixed(2).replace('.', ',')}`;
-            saldoTexto.className = `font-mono text-base font-black ${saldo >= 0 ? 'text-emerald-400' : 'text-red-400'}`;
-
-            if (totalJogadores === 0) {
-                listaVazia.classList.remove('hidden');
-                return;
-            }
-            listaVazia.classList.add('hidden');
-
-            jogadores.forEach((jogador, index) => {
-                const valorPago = parseFloat(jogador.valor_pago) || 0.00;
-                const pendente = valorPago === 0;
-
+            admins.forEach(adm => {
                 const li = document.createElement('li');
-                li.className = "flex items-center gap-3 bg-slate-700/40 px-4 py-3 rounded-xl border border-slate-700/60";
+                li.className = 'flex justify-between items-center bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/60';
+
+                let btnExcluir = '';
+                if (admins.length > 1) {
+                    btnExcluir = `
+                        <button onclick="excluirAdmin(${adm.id}, '${adm.usuario}')" class="text-rose-400 hover:text-rose-300 transition" title="Excluir admin">
+                            <i class="fa-solid fa-user-minus"></i>
+                        </button>
+                    `;
+                } else {
+                    btnExcluir = `<span class="text-[10px] text-slate-500" title="Único administrador não pode ser removido">Principal</span>`;
+                }
+
                 li.innerHTML = `
-                    <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">${index + 1}º</span>
-                    <span class="font-medium text-slate-200 flex-1">${jogador.nome}</span>
-                    ${pendente ? '' : `
-                        <span class="text-xs px-2.5 py-1 rounded-full font-mono font-bold text-emerald-400 bg-emerald-500/10">
-                            R$ ${valorPago.toFixed(2).replace('.', ',')}
-                        </span>
-                    `}
+                    <span class="text-slate-200 font-medium flex items-center gap-2">
+                        <i class="fa-solid fa-user-shield text-amber-400/70 text-xs"></i>
+                        ${adm.usuario}
+                        ${adm.usuario === usuarioLogado ? '<span class="text-[10px] bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded">(Você)</span>' : ''}
+                    </span>
+                    ${btnExcluir}
                 `;
-                lista.appendChild(li);
+                ul.appendChild(li);
             });
         }
 
-        function renderizarPainelGerenciamento() {
-            const listaGerenciar = document.getElementById('listaGerenciar');
-            listaGerenciar.innerHTML = "";
-            if (jogadores.length === 0) {
-                listaGerenciar.innerHTML = `<li class="text-center text-xs text-slate-500 py-2">Nenhum jogador na lista.</li>`;
+        async function salvarChavePix(e) {
+            e.preventDefault();
+            const chave = document.getElementById('inputChavePix').value.trim();
+            await fetchSeguro(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ acao: 'salvar_chave_pix', chave_pix: chave })
+            });
+            alert('Chave PIX salva!');
+            carregarDados();
+        }
+
+        async function salvarWhatsapp(e) {
+            e.preventDefault();
+            const wa = document.getElementById('inputWhatsapp').value.trim();
+            await fetchSeguro(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ acao: 'salvar_whatsapp', whatsapp: wa })
+            });
+            alert('WhatsApp salvo!');
+            carregarDados();
+        }
+
+        async function excluirAdmin(id, usuario) {
+            if (!confirm(`Deseja realmente remover o administrador "${usuario}"?`)) return;
+            const res = await fetchSeguro(API_URL, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tipo: 'admin', id: id })
+            });
+            const data = await res.json();
+            if (data.sucesso) {
+                alert('Administrador removido com sucesso!');
+                carregarDados();
             } else {
-                jogadores.forEach((jogador) => {
-                    const li = document.createElement('li');
-                    li.className = "flex justify-between items-center bg-slate-900 px-3 py-2 rounded-lg border border-slate-700 gap-2";
-                    li.innerHTML = `
-                        <span class="text-xs text-slate-300 font-medium truncate flex-1">${jogador.nome}</span>
-                        <div class="flex items-center gap-1.5 shrink-0">
-                            <span class="text-xs text-slate-500">R$</span>
-                            <input type="number" step="0.01" id="valorInput_${jogador.id}" 
-                                value="${(parseFloat(jogador.valor_pago) || 0).toFixed(2)}" 
-                                class="w-16 bg-slate-800 border border-slate-700 rounded px-1.5 py-1 text-xs text-white font-mono focus:border-emerald-500 outline-none">
-                            <button onclick="editarValorJogador(${jogador.id})" title="Salvar Valor" class="bg-emerald-600 hover:bg-emerald-500 text-slate-900 text-xs px-2 py-1 rounded font-bold">
-                                <i class="fa-solid fa-check"></i>
-                            </button>
-                            <button onclick="removerJogador(${jogador.id}, '${jogador.nome.replace(/'/g, "\\'")}')" class="text-red-400 hover:text-red-500 p-1">
-                                <i class="fa-solid fa-trash-can text-xs"></i>
-                            </button>
-                        </div>
-                    `;
-                    listaGerenciar.appendChild(li);
-                });
+                alert(data.mensagem || 'Erro ao remover administrador.');
+            }
+        }
+
+        async function adicionarJogador(e) {
+            e.preventDefault();
+            const input = document.getElementById('novoJogadorNome');
+            const nome = input.value.trim();
+            if (!nome) return;
+            await fetchSeguro(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ acao: 'adicionar_jogador', nome: nome, valor: 20.00 })
+            });
+            input.value = '';
+            carregarDados();
+        }
+
+        async function editarValorJogador(id, valorAtual) {
+            const novoValor = prompt('Informe o novo valor pago pelo jogador:', valorAtual);
+            if (novoValor === null) return;
+            await fetchSeguro(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ acao: 'editar_jogador', id: id, valor: parseFloat(novoValor) })
+            });
+            carregarDados();
+        }
+
+        async function removerJogador(id) {
+            if (!confirm('Deseja realmente remover este jogador?')) return;
+            await fetchSeguro(API_URL, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: id, tipo: 'jogador' })
+            });
+            carregarDados();
+        }
+
+        async function quitarPendencia(id, nome, valorDevido) {
+            const valorPago = prompt(`Informe o valor pago por ${nome}:`, valorDevido);
+            if (valorPago === null) return;
+
+            const valor = parseFloat(valorPago);
+            if (isNaN(valor) || valor <= 0) {
+                alert('Insira um valor válido.');
+                return;
             }
 
-            const listaParcelas = document.getElementById('listaParcelas');
-            listaParcelas.innerHTML = "";
-            if (pagamentosQuadra.length === 0) {
-                listaParcelas.innerHTML = `<li class="text-center text-[11px] text-slate-500 py-1">Nenhum pagamento registrado.</li>`;
+            const res = await fetchSeguro(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ acao: 'quitar_pendencia', id: id, valor_pago: valor })
+            });
+
+            const data = await res.json();
+            if (data.sucesso) {
+                alert(data.mensagem || 'Pendência quitada com sucesso!');
+                carregarDados();
             } else {
-                pagamentosQuadra.forEach((pag) => {
-                    const li = document.createElement('li');
-                    li.className = "flex justify-between items-center bg-slate-800 px-2.5 py-1 rounded border border-slate-700/80 text-xs";
-                    li.innerHTML = `
-                        <span class="text-slate-300 truncate max-w-[160px]">${pag.descricao} <span class="text-[10px] text-slate-500">(${pag.data})</span></span>
-                        <div class="flex items-center gap-2">
-                            <span class="font-mono text-emerald-400 font-bold">R$ ${parseFloat(pag.valor).toFixed(2).replace('.', ',')}</span>
-                            <button onclick="removerParcela(${pag.id})" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-xmark"></i></button>
-                        </div>
-                    `;
-                    listaParcelas.appendChild(li);
-                });
+                alert(data.mensagem || 'Erro ao quitar pendência.');
             }
+        }
+
+        async function removerPendencia(id) {
+            if (!confirm('Deseja realmente excluir este registro de pendência acumulada?')) return;
+            await fetchSeguro(API_URL, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: id, tipo: 'pendencia' })
+            });
+            carregarDados();
+        }
+
+        async function salvarCustoQuadra(e) {
+            e.preventDefault();
+            const valor = parseFloat(document.getElementById('inputCustoQuadra').value);
+            if (isNaN(valor)) return;
+            await fetchSeguro(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ acao: 'salvar_custo_quadra', valor: valor })
+            });
+            document.getElementById('inputCustoQuadra').value = '';
+            carregarDados();
+        }
+
+        async function pagarParcelaQuadra(e) {
+            e.preventDefault();
+            const valor = parseFloat(document.getElementById('inputValorParcela').value);
+            if (isNaN(valor) || valor <= 0) return;
+            await fetchSeguro(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ acao: 'pagar_parcela_quadra', valor: valor, descricao: 'Pagamento Quadra' })
+            });
+            document.getElementById('inputValorParcela').value = '';
+            carregarDados();
+        }
+
+        async function removerPagamentoQuadra(id) {
+            if (!confirm('Deseja remover este registro de pagamento da quadra?')) return;
+            await fetchSeguro(API_URL, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id: id, tipo: 'pagamento_quadra' })
+            });
+            carregarDados();
+        }
+
+        async function finalizarEtapa() {
+            if (!confirm('Deseja realmente FINALIZAR A ETAPA?\n\n- A lista de presença atual será limpa.\n- Jogadores sem pagamento terão suas dívidas migradas para o histórico de pendências.\n- O saldo restante será transferido para o Saldo Caixa.')) return;
+            await fetchSeguro(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ acao: 'finalizar_etapa' })
+            });
+            alert('Nova etapa iniciada com sucesso!');
+            carregarDados();
+        }
+
+        async function zerarCaixa() {
+            if (!confirm('Deseja realmente ZERAR O SALDO DO CAIXA?\nEsta ação não poderá ser desfeita.')) return;
+            await fetchSeguro(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ acao: 'zerar_caixa' })
+            });
+            alert('Saldo do caixa zerado.');
+            carregarDados();
+        }
+
+        async function alterarMinhaSenha(e) {
+            e.preventDefault();
+            const novaSenha = document.getElementById('novaSenhaInput').value.trim();
+            if (!novaSenha) return;
+            const res = await fetchSeguro(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ acao: 'alterar_senha', usuario: usuarioLogado, nova_senha: novaSenha })
+            });
+            const data = await res.json();
+            alert(data.mensagem || 'Senha alterada com sucesso!');
+            document.getElementById('novaSenhaInput').value = '';
+        }
+
+        async function cadastrarNovoAdmin(e) {
+            e.preventDefault();
+            const novoUser = document.getElementById('novoAdminUser').value.trim();
+            const novoPass = document.getElementById('novoAdminPass').value.trim();
+            if (!novoUser || !novoPass) return;
+            const res = await fetchSeguro(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ acao: 'cadastrar_admin', novo_usuario: novoUser, nova_senha: novoPass })
+            });
+            const data = await res.json();
+            alert(data.mensagem || 'Processo concluído!');
+            document.getElementById('novoAdminUser').value = '';
+            document.getElementById('novoAdminPass').value = '';
+            carregarDados();
         }
     </script>
 </body>
+
 </html>

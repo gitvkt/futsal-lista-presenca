@@ -1,9 +1,17 @@
 <?php
-// Configurações do Banco de Dados
+// Prevenção estrita contra cache
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+
+// Define que a resposta será um JSON
+header("Content-Type: application/json; charset=UTF-8");
+
+// Exemplo de Configurações do banco de dados
 $host = 'localhost';
-$dbname = 'SEU_BANCO_DE_DADOS';
-$user = 'SEU_USUARIO';
-$pass = 'SUA_SENHA';
+$dbname = 'futsal';
+$user = 'futsal';
+$pass = '123@Mudar';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass, [
@@ -12,6 +20,6 @@ try {
     ]);
 } catch (PDOException $e) {
     http_response_code(500);
-    echo json_encode(['error' => 'Falha na conexão com o banco de dados.']);
+    echo json_encode(["erro_conexao" => $e->getMessage()]);
     exit;
 }
