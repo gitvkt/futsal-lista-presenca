@@ -52,6 +52,8 @@ Senha Admin: Senha de acesso do administrador.
 
 Clique no botão "Instalar e Configurar".
 
+---
+
 ### 🤖 Processos Automatizados pelo Instalador:
 [x] Banco de Dados: Importação automática da estrutura de tabelas do schema.sql.
 
@@ -61,6 +63,9 @@ Clique no botão "Instalar e Configurar".
 
 [x] Segurança: Criação do arquivo de bloqueio install/installed.lock.
 
+
+---
+
 ### 🔒 Ações de Segurança Pós-Instalação
 [!IMPORTANT]
 Após concluir a instalação e confirmar que o sistema está funcionando, execute os seguintes passos de segurança:
@@ -69,12 +74,19 @@ Após concluir a instalação e confirmar que o sistema está funcionando, execu
 
 [ ] Permissões de Arquivo: Certifique-se de que o arquivo conexao.php esteja configurado com a permissão de leitura 0644.
 
+
+---
+
 ### 🔄 Como Forçar uma Reinstalação
 Se precisar refazer o processo de instalação do zero:
 
 Exclua o arquivo conexao.php localizado na raiz do projeto.
 
 Exclua o arquivo install/installed.lock.
+
+
+---
+
 ### 
 Acesse novamente no navegador a URL:
 
