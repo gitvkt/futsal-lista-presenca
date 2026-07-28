@@ -12,6 +12,29 @@ e este projeto adere ao [Versioning Semântico](https://semver.org/lang/pt-BR/2.
 
 ---
 
+[5.0.1] - 2026-07-28
+🚀 Melhorias & Novas Funcionalidades
+Instalador Web Automatizado:
+
+Atualizada a rota principal do assistente de instalação para install/index.php, eliminando a necessidade de digitar o arquivo explicitamente na URL.
+
+Implementada a importação dinâmica do banco de dados a partir do arquivo estruturado schema.sql.
+
+Criação automática e segura das credenciais administrativas iniciais durante o processo de instalação.
+
+🐛 Correções de Erros (Bug Fixes)
+Geração Dinâmica do conexao.php:
+
+Corrigida a gravação das credenciais do banco de dados para evitar o uso de dados genéricos de exemplo.
+
+Implementado tratamento de caracteres especiais nas senhas do MySQL (escape com addslashes) para prevenir quebras de sintaxe no PHP gerado.
+
+Trava de Instalação e Tratamento de Exceções:
+
+Ajustada a verificação de segurança no topo do api.php para interromper requisições JSON e alertar o usuário caso o sistema ainda não tenha sido instalado.
+
+Aprimoradas as mensagens de erro e o fluxo de criação da trava installed.lock.
+
 ## [5.0.0] - 2026-07-28
 
 ### 🚀 Adicionado
