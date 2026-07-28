@@ -12,6 +12,21 @@ e este projeto adere ao [Versioning Semântico](https://semver.org/lang/pt-BR/2.
 
 ---
 
+## [5.0.0] - 2026-07-28
+
+### 🚀 Adicionado
+- **Gestão de Pendências Acumuladas:** Novo painel para visualização e acompanhamento de dívidas de etapas anteriores.
+- **Quitação de Dívidas:** Opção para dar baixa manual em pendências com soma/abatimento automático no Saldo Caixa.
+- **Listagem de Inadimplentes da Etapa:** Seção dedicada no painel Admin para identificar rapidamente quem ainda não pagou no ciclo atual.
+- **Ações Rápidas por Jogador:** Botões diretos para dar baixa, editar valores e remover lançamentos pendentes.
+
+### 🔄 Modificado
+- **Integração de Caixa:** As quitações de pendências passadas agora alimentam diretamente o fluxo do saldo do caixa.
+- **Interface e Layout:** Refatoração completa das tabelas de controle admin em componentes Tailwind CSS otimizados e responsivos.
+
+### 🛡️ Segurança
+- Interceptação e tratamento de sessões expiradas (status HTTP 403) com fechamento automático dos recursos do painel administrativo.
+
 ## [4.4.0] - 2026-07-25
 
 ### Alterado
