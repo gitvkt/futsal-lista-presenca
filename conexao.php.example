@@ -4,14 +4,11 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
-// Define que a resposta será um JSON
-header("Content-Type: application/json; charset=UTF-8");
-
-// Exemplo de Configurações do banco de dados
-$host = 'localhost';
-$dbname = 'futsal';
-$user = 'futsal';
-$pass = '123@Mudar';
+// Configurações do banco de dados (Geradas pelo Instalador)
+$host = '{{DB_HOST}}';
+$dbname = '{{DB_NAME}}';
+$user = '{{DB_USER}}';
+$pass = '{{DB_PASS}}';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass, [
@@ -20,6 +17,7 @@ try {
     ]);
 } catch (PDOException $e) {
     http_response_code(500);
+    header("Content-Type: application/json; charset=UTF-8");
     echo json_encode(["erro_conexao" => $e->getMessage()]);
     exit;
 }

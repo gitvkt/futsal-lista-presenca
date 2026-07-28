@@ -1,4 +1,16 @@
 <?php
+// 1. VERIFICAÇÃO DE INSTALAÇÃO
+// Se o arquivo conexao.php não existir, interrompe o carregamento e sinaliza para o instalador
+if (!file_exists(__DIR__ . '/conexao.php')) {
+    header("Content-Type: application/json; charset=utf-8");
+    http_response_code(503);
+    echo json_encode([
+        'sucesso' => false,
+        'mensagem' => 'Sistema não instalado. Por favor, acesse a pasta /install para realizar a configuração inicial.'
+    ]);
+    exit;
+}
+
 session_start(); // Inicia o controle de sessão seguro no servidor
 require_once 'conexao.php';
 
@@ -237,7 +249,6 @@ if ($method === 'POST') {
         exit;
     }
 
-    // --- NOVA AÇÃO: QUITAR PENDÊNCIA E SOMAR AO SALDO ---
     if ($acao === 'quitar_pendencia') {
         $id = intval($data['id'] ?? 0);
         $valorPago = floatval($data['valor_pago'] ?? 0);
@@ -312,7 +323,7 @@ if ($method === 'POST') {
 }
 
 if ($method === 'DELETE') {
-    // Protege também todas as rotas de exclusão
+    // Protege todas as rotas de exclusão
     verificarAutenticacao();
 
     $data = json_decode(file_get_contents('php://input'), true);
