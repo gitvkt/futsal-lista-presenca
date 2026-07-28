@@ -32,3 +32,51 @@ Guia passo a passo para instalação e implantação do sistema em ambientes de 
 1. Acesse o diretório de instalação através do seu navegador:
    ```text
    [https://seusite.com.br/install/](https://seusite.com.br/install/)
+
+
+Como o arquivo principal é o index.php, o assistente será carregado automaticamente ao acessar a pasta.
+
+Preencha as credenciais solicitadas no formulário:
+
+Host: localhost (ou o IP/host do seu servidor MySQL)
+
+Nome do Banco: Nome completo do banco de dados criado no cPanel.
+
+Usuário do Banco: Usuário atribuído ao banco de dados.
+
+Senha do Banco: Senha do usuário MySQL.
+
+Usuário Admin: Nome para login no painel administrativo (padrão: admin).
+
+Senha Admin: Senha de acesso do administrador.
+
+Clique no botão "Instalar e Configurar".
+
+### 🤖 Processos Automatizados pelo Instalador:
+[x] Banco de Dados: Importação automática da estrutura de tabelas do schema.sql.
+
+[x] Administrador: Cadastro da conta admin com senha criptografada via password_hash.
+
+[x] Configuração: Geração dinâmica do arquivo conexao.php na raiz do projeto.
+
+[x] Segurança: Criação do arquivo de bloqueio install/installed.lock.
+
+### 🔒 Ações de Segurança Pós-Instalação
+[!IMPORTANT]
+Após concluir a instalação e confirmar que o sistema está funcionando, execute os seguintes passos de segurança:
+
+[ ] Remover o Instalador: Apague a pasta /install do servidor via cPanel ou FTP para evitar execuções indevidas.
+
+[ ] Permissões de Arquivo: Certifique-se de que o arquivo conexao.php esteja configurado com a permissão de leitura 0644.
+
+### 🔄 Como Forçar uma Reinstalação
+Se precisar refazer o processo de instalação do zero:
+
+Exclua o arquivo conexao.php localizado na raiz do projeto.
+
+Exclua o arquivo install/installed.lock.
+### 
+Acesse novamente no navegador a URL:
+
+Plaintext
+[https://seusite.com.br/install/](https://seusite.com.br/install/)
