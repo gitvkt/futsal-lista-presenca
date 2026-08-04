@@ -1,7 +1,8 @@
 # ⚽ Futsal da Firma — Lista de Presença & Gestão Financeira
 
 <p align="center">
-  <img width="500" alt="Pré-visualização do Futsal da Firma" src="https://github.com/user-attachments/assets/155292b9-e924-4ea0-bdad-450e3b5d52f7" />
+  <img width="500" height="2106" alt="00futsal" src="https://github.com/user-attachments/assets/ac0bce95-de20-49a8-89a5-01057c80cb8f" />
+
 </p>
 
 Aplicação web leve, ágil e responsiva (*Single Page Application*) para gerenciamento de listas de presença e controle financeiro de partidas recreativas de futsal.
